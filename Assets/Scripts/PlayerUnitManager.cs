@@ -2,34 +2,50 @@ using UnityEngine;
 
 public class PlayerUnitManager : UnitManager
 {
+    [Header("UnitStatus")]
     public UnitStatus playerUnitStatus;
     [HideInInspector]public enum UpDownStatus { UP, DOWN };
     [HideInInspector]public UpDownStatus updownStatus;
     [HideInInspector]public int buyUnitIndex;
-    public int buyCost;
-    public int sellCost;
+
     private void Start()
     {
+
         playerUnitStatus.currentHP = playerUnitStatus.maxHP;
     }
     override protected void Update()
     {
+
         if (LevelManager.instance.currentState == StateType.NONBATTLE)
             return;
 
         var dir = base.MoveToTarget(transform,LevelManager.enemyLayer,ref playerUnitStatus);
-        base.SetAttackCol(ref playerUnitStatus, dir, playerUnitStatus.attackRange);
-        base.SetAnmation(playerUnitStatus);
-        base.Update();
+        if(dir != Vector2.zero)
+        {
+            base.SetAttackCol(ref playerUnitStatus, dir, playerUnitStatus.attackRange);
+            base.SetAnmation(playerUnitStatus, transform);
+            base.Update();
+        }
     }
 
+    /// <summary>
+    /// 유닛 본체에서 공격에 대한 충돌판정 진행
+    /// </summary>
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag(LevelManager.enemyMeleeAttackTag))
         {
-            Debug.Log("1");
-            base.SetHP(-collision.GetComponent<EnemyUnitManager>().enemyUnitStatus.attackDamage,
-                playerUnitStatus, LevelManager.playerLayer);
+            var attack = collision.transform.parent.transform.parent.GetComponent<EnemyUnitManager>();
+            base.SetHP(attack.enemyUnitStatus.attackDamage, playerUnitStatus);
+        }
+        if(collision.CompareTag(LevelManager.bulletTag))
+        {
+            var bullet = collision.GetComponent<BulletController>();
+            if(bullet.GroupType == groupType.ENEMY)
+            {
+                base.SetHP(-bullet.bulletDamage, playerUnitStatus);
+                Destroy(bullet);
+            }
         }
     }
 }

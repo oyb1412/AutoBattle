@@ -9,9 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4366782214244110179}
-  - component: {fileID: 1269740537038417258}
   - component: {fileID: -3851899594568828180}
+  - component: {fileID: 1269740537038417258}
   - component: {fileID: -2849716174948298643}
+  - component: {fileID: 8104080490147497376}
+  - component: {fileID: 123726987078776611}
   m_Layer: 6
   m_Name: Melee1
   m_TagString: Player
@@ -35,6 +37,38 @@ Transform:
   - {fileID: 92196514224131077}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-3851899594568828180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1852496132539595425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77ff66c7632e99f48a526e69cb689e94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationTrigger: 0
+  playerUnitStatus:
+    currentUnitType: 0
+    currentUnitState: 0
+    currentUnitGroup: 0
+    currentHP: 0
+    maxHP: 0
+    moveSpeed: 0
+    attackSpeed: 0
+    attackDamage: 0
+    attackRange: 0.5
+    minDistance: 1
+    attackCollider: {fileID: 2921467350519887112}
+    attackBullet: {fileID: 0}
+    levelStar: {fileID: 0}
+    hpBar: {fileID: 0}
+  updownStatus: 0
+  buyUnitIndex: 0
+  buyCost: 0
+  sellCost: 0
 --- !u!212 &1269740537038417258
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -87,37 +121,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-3851899594568828180
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1852496132539595425}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77ff66c7632e99f48a526e69cb689e94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerUnitStatus:
-    currentUnitType: 0
-    currentUnitState: 0
-    currentUnitGroup: 0
-    currentHP: 0
-    maxHP: 0
-    moveSpeed: 0
-    attackSpeed: 0
-    attackDamage: 0
-    attackRange: 0.5
-    minDistance: 1
-    attackCollider: {fileID: 2921467350519887112}
-    attackBullet: {fileID: 0}
-    levelStar: {fileID: 0}
-    hpBar: {fileID: 0}
-    buyCost: 0
-    sellCost: 0
-  updownStatus: 0
-  buyUnitIndex: 0
 --- !u!61 &-2849716174948298643
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -163,6 +166,54 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.1007769, y: 1.2980031}
   m_EdgeRadius: 0
+--- !u!50 &8104080490147497376
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1852496132539595425}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!95 &123726987078776611
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1852496132539595425}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 8e71bd90c5af5d04da6ca68c2bcdc0ab, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7316447165355041518
 GameObject:
   m_ObjectHideFlags: 0
@@ -234,7 +285,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8707868424247390538}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:

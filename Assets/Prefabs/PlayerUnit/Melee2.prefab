@@ -39,7 +39,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2249781879469088219}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -118,9 +118,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8292377377644047684}
-  - component: {fileID: 4952686670198099874}
   - component: {fileID: 6974331238981706348}
+  - component: {fileID: 4952686670198099874}
   - component: {fileID: -2496149997437763669}
+  - component: {fileID: -7257409962409836460}
+  - component: {fileID: 9098170113474079731}
   m_Layer: 6
   m_Name: Melee2
   m_TagString: Player
@@ -144,6 +146,38 @@ Transform:
   - {fileID: 2377941892703053930}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6974331238981706348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7110318391252797162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77ff66c7632e99f48a526e69cb689e94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationTrigger: 0
+  playerUnitStatus:
+    currentUnitType: 0
+    currentUnitState: 0
+    currentUnitGroup: 0
+    currentHP: 0
+    maxHP: 0
+    moveSpeed: 5
+    attackSpeed: 0
+    attackDamage: 0
+    attackRange: 0.5
+    minDistance: 1
+    attackCollider: {fileID: 7787513750268472599}
+    attackBullet: {fileID: 0}
+    levelStar: {fileID: 0}
+    hpBar: {fileID: 0}
+  updownStatus: 0
+  buyUnitIndex: 0
+  buyCost: 0
+  sellCost: 0
 --- !u!212 &4952686670198099874
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -196,37 +230,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6974331238981706348
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7110318391252797162}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77ff66c7632e99f48a526e69cb689e94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerUnitStatus:
-    currentUnitType: 0
-    currentUnitState: 0
-    currentUnitGroup: 0
-    currentHP: 0
-    maxHP: 0
-    moveSpeed: 5
-    attackSpeed: 0
-    attackDamage: 0
-    attackRange: 0.5
-    minDistance: 1
-    attackCollider: {fileID: 7787513750268472599}
-    attackBullet: {fileID: 0}
-    levelStar: {fileID: 0}
-    hpBar: {fileID: 0}
-    buyCost: 0
-    sellCost: 0
-  updownStatus: 0
-  buyUnitIndex: 0
 --- !u!61 &-2496149997437763669
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -272,3 +275,51 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.1007769, y: 1.2980031}
   m_EdgeRadius: 0
+--- !u!50 &-7257409962409836460
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7110318391252797162}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!95 &9098170113474079731
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7110318391252797162}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 5fefdc649d8f2334e84c8fe68ac8bdf4, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

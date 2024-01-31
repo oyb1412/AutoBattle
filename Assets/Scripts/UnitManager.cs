@@ -1,38 +1,63 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
+//적아군 구별용 배열
 public enum groupType { PLAYER, ENEMY}
+//유닛 공격타입 구별용 배열
 public enum unitType { MELEE,RANGE,MAGE}
+
+//현재 스테이트 구별용 배열
 public enum unitState { MOVE,ATTACK,DIE,IDLE}
 public class UnitManager : MonoBehaviour
 {
+    //유닛 스텟 클래스
     [System.Serializable]
     public class UnitStatus
     {
-        [SerializeField]public unitType currentUnitType;
-        [SerializeField]public unitState currentUnitState;
-        [SerializeField]public groupType currentUnitGroup;
-        [SerializeField]public float currentHP;
-        [SerializeField]public float maxHP;
-        [SerializeField]public float moveSpeed;
-        [SerializeField]public float attackSpeed;
-        [SerializeField]public float attackDamage;
-        [SerializeField]public float attackRange;
-        [SerializeField]public float minDistance;
-        [SerializeField]public Collider2D attackCollider;
-        [SerializeField]public GameObject attackBullet;
-        [SerializeField]public GameObject levelStar;
-        [SerializeField]public GameObject hpBar;
+       public unitType currentUnitType;
+       public unitState currentUnitState;
+       public groupType currentUnitGroup;
+       public float currentHP;
+       public float maxHP;
+       public float moveSpeed;
+       public float attackSpeed;
+       public float attackDamage;
+       public float attackRange;
+       public float minDistance;
+       public Collider2D attackCollider;
+       public GameObject attackBullet;
+       public GameObject levelStar;
+       public GameObject hpBar;
+       public GameObject firePos;
 
     }
 
-    [SerializeField] protected RaycastHit2D[] targets;
+
+    //주변 적 저장용 배열
+    protected RaycastHit2D[] targets;
+
+    //주변 적을 스캔할 거리
     const float scanRange = 30f;
+
+    //사망판정 후 destroy까지 걸리는 시간
     const float dieSpeed = 0.5f;
+
+    //유닛 본체의 콜라이더
     protected Collider2D unitCollider;
+
+    //유닛 본체의 애니메이터
     protected Animator anime;
+
+    //가장 가까운 적 저장용 오브젝트
+    UnitManager target;
+
+    //한번 실행용 트리거
+    bool attackTrigger;
     bool animationTrigger;
+
     private void Awake()
     {
         unitCollider = GetComponent<Collider2D>();
@@ -51,39 +76,51 @@ public class UnitManager : MonoBehaviour
     /// <param name="unit">이동할 유닛의 unitStatus</param>
     protected Vector2 MoveToTarget(Transform trans, string layer, ref UnitStatus unit)
     {
-        var target = GetTarget(trans, layer);
-        Vector2 dir = target.transform.position - transform.position;
-        var sprite = GetComponent<SpriteRenderer>();
-        if (dir.magnitude > unit.minDistance)
+        if(GetTarget(trans,layer) == null)
         {
-            transform.Translate(dir.normalized * unit.moveSpeed * Time.deltaTime);
-            unit.currentUnitState = unitState.MOVE;
+            return Vector2.zero;
         }
         else
-            unit.currentUnitState = unitState.ATTACK;
-
-        #region Flip반전
-        if (unit.currentUnitGroup == groupType.PLAYER)
         {
-            if(target.transform.position.x < trans.position.x)
-                sprite.flipX = true;
+            target = GetTarget(trans, layer);
+            Vector2 dir = target.transform.position - transform.position;
+            var sprite = GetComponent<SpriteRenderer>();
+            if (dir.magnitude > unit.minDistance)
+            {
+                transform.Translate(dir.normalized * unit.moveSpeed * Time.deltaTime);
+                unit.currentUnitState = unitState.MOVE;
+            }
+            else if(unit.currentHP > 0)
+                unit.currentUnitState = unitState.ATTACK;
+
+            #region Flip반전
+            if (unit.currentUnitGroup == groupType.PLAYER)
+            {
+                if (target.transform.position.x < trans.position.x)
+                    sprite.flipX = true;
                 else
-                sprite.flipX = false;
+                    sprite.flipX = false;
 
-        }
-        else
-        {
-            if (target.transform.position.x < trans.position.x)
-                sprite.flipX = true;
+            }
             else
-                sprite.flipX = false;
-        }
-        #endregion
+            {
+                if (target.transform.position.x < trans.position.x)
+                    sprite.flipX = true;
+                else
+                    sprite.flipX = false;
+            }
+            #endregion
 
-        return dir;
+            return dir;
+        }
+        
     }
 
-    protected void SetAnmation(UnitStatus unit)
+    /// <summary>
+    /// 유닛의 현재 상태에 따라 애니메이션 진행
+    /// 사망은 한번만 실행하기 위해 트리거를 사용
+    /// </summary>
+    protected void SetAnmation(UnitStatus unit, Transform trans)
     {
         switch(unit.currentUnitState)
         {
@@ -91,14 +128,65 @@ public class UnitManager : MonoBehaviour
                 anime.SetBool("Run", true);
                 break;
             case unitState.ATTACK:
-                if(!animationTrigger)
-                    StartCoroutine(MeleeAttackCorutine(unit));
+                if (!attackTrigger)
+                {
+                    if (unit.currentUnitType == unitType.MELEE)
+                        StartCoroutine(MeleeAttackCorutine(unit));
+                    else if(unit.currentUnitType != unitType.RANGE)
+                        StartCoroutine(RangeAttackCorutine(unit, trans));
+                    else
+                        StartCoroutine(MageAttackCorutine(unit, trans));
+
+                }
                 break;
             case unitState.DIE:
                 if (!animationTrigger)
                     StartCoroutine(DieCorutine(unit));
                     break;
         }
+    }
+
+    /// <summary>
+    /// 메이지 유닛 공격 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator MageAttackCorutine(UnitStatus unit, Transform trans)
+    {
+        var attacktime = new WaitForSeconds(unit.attackSpeed);
+        anime.SetBool("Run", false);
+        anime.SetTrigger("Attack");
+        attackTrigger = true;
+
+        yield return attacktime;
+        var dir = target.transform.position - unit.firePos.transform.position;
+        var arrow = Instantiate(unit.attackBullet, unit.firePos.transform);
+        if (unit.currentUnitGroup == groupType.PLAYER)
+            arrow.GetComponent<BulletController>().Init(target.transform.position, dir, unit.attackDamage, groupType.PLAYER);
+        else
+            arrow.GetComponent<BulletController>().Init(target.transform.position, dir, unit.attackDamage, groupType.ENEMY);
+        attackTrigger = false;
+    }
+
+    /// <summary>
+    /// 원거리 유닛 공격 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator RangeAttackCorutine(UnitStatus unit, Transform trans)
+    {
+        var attacktime = new WaitForSeconds(unit.attackSpeed);
+        var shottime = new WaitForSeconds(unit.attackSpeed * 0.4f);
+        anime.SetBool("Run", false);
+        anime.SetTrigger("Attack");
+        attackTrigger = true;
+        yield return shottime;
+        var dir = target.transform.position - unit.firePos.transform.position;
+        var arrow = Instantiate(unit.attackBullet, unit.firePos.transform);
+        if(unit.currentUnitGroup == groupType.PLAYER)
+            arrow.GetComponent<BulletController>().Init(target.transform.position,dir, unit.attackDamage, groupType.PLAYER);
+        else
+            arrow.GetComponent<BulletController>().Init(target.transform.position, dir, unit.attackDamage, groupType.ENEMY);
+        yield return attacktime;
+        attackTrigger = false;
     }
 
     /// <summary>
@@ -115,7 +203,13 @@ public class UnitManager : MonoBehaviour
         anime.SetTrigger("Die");
         yield return dietime;
         animationTrigger = false;
+        if(unit.currentUnitGroup == groupType.ENEMY)
+            LevelManager.instance.ExitBattleState(LevelManager.enemyTag);
+        else
+            LevelManager.instance.ExitBattleState(LevelManager.playerTag);
+
         Destroy(gameObject);
+
     }
 
     /// <summary>
@@ -125,17 +219,22 @@ public class UnitManager : MonoBehaviour
     IEnumerator MeleeAttackCorutine(UnitStatus unit)
     {
         var attacktime = new WaitForSeconds(unit.attackSpeed);
-        animationTrigger = true;
         anime.SetBool("Run", false);
-        anime.SetTrigger("Attack");    
+        anime.SetTrigger("Attack");
+        attackTrigger = true;
         yield return attacktime;
-        animationTrigger = false;
-
+        attackTrigger = false;
     }
+
+   /// <summary>
+   /// 밀리유닛의 전방으로 어택 콜라이더 배치
+   /// </summary>
     protected void SetAttackCol(ref UnitStatus unit, Vector2 dir, float range)
     {
+        if(unit.attackCollider != null)
         unit.attackCollider.offset = dir.normalized * range;
     }
+
     /// <summary>
     /// 가장 가까운 적 추적
     /// </summary>
@@ -164,7 +263,10 @@ public class UnitManager : MonoBehaviour
                 result = target.transform;
             }
         }
-        return result.GetComponent<UnitManager>();
+        if (targets.Length != 0)
+            return result.GetComponent<UnitManager>();
+        else
+            return null;
     }
 
 
@@ -176,17 +278,17 @@ public class UnitManager : MonoBehaviour
     /// <param name="value"></param>
     /// <param name="unit"></param>
     /// <param name="layer"></param>
-    protected void SetHP(float value, UnitStatus unit, string layer)
+    protected void SetHP(float value, UnitStatus unit)
     {
         unit.currentHP += value;
         if (unit.currentHP <= 0)
         {
-            LevelManager.instance.ExitBattleState(layer);
+            unitCollider.enabled = false;
+            unit.currentUnitState = unitState.DIE;
         }
         else
         {
-            unitCollider.enabled = false;
-            //사망판정
+
         }
     }
 }

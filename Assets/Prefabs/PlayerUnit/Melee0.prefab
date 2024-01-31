@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1800644995101576919}
   - component: {fileID: -2463778330447732869}
   - component: {fileID: -1224379790312486901}
+  - component: {fileID: 2687826082414232899}
   m_Layer: 6
   m_Name: Melee0
   m_TagString: Player
@@ -48,14 +49,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77ff66c7632e99f48a526e69cb689e94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectManager: {fileID: 0}
+  animationTrigger: 0
   playerUnitStatus:
     currentUnitType: 0
     currentUnitState: 0
     currentUnitGroup: 0
     currentHP: 0
-    maxHP: 20
+    maxHP: 1321312
     moveSpeed: 5
-    attackSpeed: 1
+    attackSpeed: 3
     attackDamage: 10
     attackRange: 0.5
     minDistance: 1
@@ -63,6 +66,7 @@ MonoBehaviour:
     attackBullet: {fileID: 0}
     levelStar: {fileID: 0}
     hpBar: {fileID: 0}
+    firePos: {fileID: 0}
   updownStatus: 0
   buyUnitIndex: 0
   buyCost: 0
@@ -185,6 +189,33 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!50 &2687826082414232899
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 704162289863920486}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1100890875073023715
 GameObject:
   m_ObjectHideFlags: 0
