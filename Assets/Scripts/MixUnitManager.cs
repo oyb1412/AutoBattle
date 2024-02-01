@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class MixUnitManager : MonoBehaviour
 {
-    [SerializeField] BuySelectUnit buySelectUnit;
 
-    [SerializeField] PlayerUnitController playerUnitController;
+
     /// <summary>
     /// 유닛을 구매 할 때마다 믹스 가능한 유닛을
     /// 체크해 믹스
@@ -15,6 +14,8 @@ public class MixUnitManager : MonoBehaviour
     {
         //유닛 보관용 리스트
         var units = new List<PlayerUnitManager>();
+        var typeEndNum = new List<PlayerUnitManager>();
+        var num = new List<PlayerUnitManager>();
 
         //활성화된 모든 유닛을 호출
         var obj = GameObject.FindGameObjectsWithTag(LevelManager.playerTag);
@@ -28,26 +29,25 @@ public class MixUnitManager : MonoBehaviour
         for (int j = 0; j < LevelManager.maxLevel; j++)
         {
             //레벨이 같은 유닛을 리스트로 저장
-            var num = units.FindAll(x => x.playerUnitStatus.level == j).ToList();
-            var typeEndNum = new List<PlayerUnitManager>();
-            for (int i = 0; i < (int)UnitSmallType.MAGE2; i++ )
-            {
-                //레벨이 같은 유닛 중에서 타입이 같은 유닛을 리스트로 저장
-                typeEndNum = num.FindAll(x => x.unitSmallType == (UnitSmallType)j).ToList();
-            }
+            num = units.FindAll(x => x.playerUnitStatus.level == j + 1).ToList();
+            if (num.Count > 2)
+                break;
+        }
+        for (int i = 0; i <= (int)UnitSmallType.MAGE2; i++)
+        {
+            //레벨이 같은 유닛 중에서 타입이 같은 유닛을 리스트로 저장
+            typeEndNum = num.FindAll(x => x.unitSmallType == (UnitSmallType)i).ToList();
+            if (typeEndNum.Count > 2)
+                break;
+        }
 
-
-            Debug.Log(num.Count + "레벨이 같은 유닛 수");
-            Debug.Log(typeEndNum.Count + "레벨이 같고 타입도 같은 유닛 수");
-
-            //레벨,종류가 같은 유닛이 3체 이상 있을 시
-            if (typeEndNum.Count >= LevelManager.mixNum)
-            {
-                //재료 제거
-                DestroyUnit(typeEndNum);
-                //합성
-                UnitLevelUp(typeEndNum);
-            }
+        //레벨,종류가 같은 유닛이 3체 이상 있을 시
+        if (typeEndNum.Count >= LevelManager.mixNum)
+        {
+            //재료 제거
+            DestroyUnit(typeEndNum);
+            //합성
+            UnitLevelUp(typeEndNum);
         }
     }
 
@@ -60,7 +60,7 @@ public class MixUnitManager : MonoBehaviour
                 BuySelectUnit.summonIndex[unit[i].buyUnitIndex] = false;
 
             //유닛이 보관함에 있었다면, 현재 보관함의 수용 숫자 감소
-            if (unit[i].transform.position.x < playerUnitController.rimitPos[1])
+            if (unit[i].transform.position.x < GameManager.instance.playerUnitController.rimitPos[1])
                 BuySelectUnit.currentActiveUnitNum--;
 
             //재료로 소모된 유닛 삭제

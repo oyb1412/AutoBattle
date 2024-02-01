@@ -9,6 +9,7 @@ public class PlayerUnitManager : UnitManager
     [HideInInspector]public UpDownStatus updownStatus;
     [HideInInspector]public int buyUnitIndex;
     public UnitSmallType unitSmallType;
+
     private void Start()
     {
 
@@ -16,17 +17,32 @@ public class PlayerUnitManager : UnitManager
     }
     override protected void Update()
     {
-
-        if (LevelManager.instance.currentState == StateType.NONBATTLE)
-            return;
-
-        var dir = base.MoveToTarget(transform,LevelManager.enemyLayer,ref playerUnitStatus);
-        if(dir != Vector2.zero)
+        base.AllWaysPlayAnimation(playerUnitStatus);
+        if (GameManager.instance.levelManager.currentState == StateType.NONBATTLE || playerUnitStatus.currentUnitState == unitState.WAIT)
         {
-            base.SetAttackCol(ref playerUnitStatus, dir, playerUnitStatus.attackRange);
-            base.SetAnmation(playerUnitStatus, transform);
-            base.Update();
+            anime.SetBool("Jump", false);
+            anime.SetBool("Run", false);
+
+            return;
         }
+
+        if (GameManager.instance.levelManager.currentState == StateType.WIN || GameManager.instance.levelManager.currentState == StateType.WAIT)
+        {
+            //점프 모션 반복실행'
+            anime.SetBool("Jump", true);
+        }
+
+        if(transform.position.x > GameManager.instance.playerUnitController.rimitPos[1] && GameManager.instance.levelManager.currentState != StateType.WAIT)
+        {
+            var dir = base.MoveToTarget(transform, LevelManager.enemyLayer, ref playerUnitStatus);
+            if (dir != Vector2.zero)
+            {
+                base.SetAttackCol(ref playerUnitStatus, dir.normalized, this);
+                base.SetAnmation(playerUnitStatus, transform);
+                base.Update();
+            }
+        }
+
     }
 
     /// <summary>

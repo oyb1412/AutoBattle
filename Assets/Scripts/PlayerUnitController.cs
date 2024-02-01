@@ -31,8 +31,7 @@ public class PlayerUnitController : MonoBehaviour
     const int maxActiveUnitNum = 9;
 
     Vector2 savePosition;
-    //보관함 위치를 특정하기 위한 오브젝트
-    [SerializeField] BuySelectUnit buySelectUnit;
+
 
     private void Start()
     {
@@ -42,7 +41,7 @@ public class PlayerUnitController : MonoBehaviour
     private void Update()
     {
         //전투 상태인 경우 리턴
-        if (LevelManager.instance.currentState == StateType.BATTLE)
+        if (GameManager.instance.levelManager.currentState == StateType.BATTLE)
             return;
 
         touchDelay += Time.deltaTime;
@@ -73,6 +72,12 @@ public class PlayerUnitController : MonoBehaviour
                 {
                     //터치 직전의 위치를 저장
                     savePosition = target.transform.position;
+
+                    //보관함에 있는 유닛을 클릭 시
+                    if (target.transform.position.x < rimitPos[1])
+                        savePosition = target.transform.position;
+                    else
+                        savePosition = new Vector2(10f, 5f);
                     isTouch = true;
                     touchDelay = 0;
                     target.updownStatus = PlayerUnitManager.UpDownStatus.UP;
@@ -101,6 +106,8 @@ public class PlayerUnitController : MonoBehaviour
                 {
                     //전장에 배치
                     target.updownStatus = PlayerUnitManager.UpDownStatus.DOWN;
+                    //유닛의 상태를 wait에서 idle로 변경
+                    target.playerUnitStatus.currentUnitState = unitState.IDLE;
                     //유닛이 있던 보관함을 비워준다
                     BuySelectUnit.summonIndex[target.buyUnitIndex] = false;
                     //활성화된 보관함의 수를 조정한다
@@ -112,9 +119,7 @@ public class PlayerUnitController : MonoBehaviour
 
                     isTouch = false;
                 }
-                //유닛을 전장 밖에 놓은 경우
-                if (target.transform.position.x < rimitPos[1])
-                {
+
                     //현재 마우스의 위치가 쓰레기통일 경우
                     if (MouseRayCast(LevelManager.SellBinTagNLayer, LevelManager.SellBinTagNLayer) != null)
                     {
@@ -125,9 +130,9 @@ public class PlayerUnitController : MonoBehaviour
                         //활성화된 보관함의 수를 조정한다
                         BuySelectUnit.currentActiveUnitNum--;
                         //유닛 판매가만큼 골드를 얻는다
-                        LevelManager.instance.SetGold(LevelManager.sellCost);
+                        GameManager.instance.levelManager.SetGold(LevelManager.sellCost);
                         //유닛을 삭제한다
-                        Destroy(target.gameObject);
+                        target.playerUnitStatus.currentUnitState = unitState.DIE;
                     }
                     //현재 마우스의 위치가 보관함일 경우
                     if(MouseRayCast(LevelManager.SpawnColliderLayer) != null)
@@ -136,6 +141,9 @@ public class PlayerUnitController : MonoBehaviour
                         //보관함이 null이 아닐때
                         if (col != null)
                         {
+
+
+
                             //유닛이 있던 보관함을 비워준다
                             BuySelectUnit.summonIndex[target.buyUnitIndex] = false;
                             //선택한 보관함을 태그로 구별
@@ -144,64 +152,130 @@ public class PlayerUnitController : MonoBehaviour
                                 case LevelManager.SpawnColliderTag0:
                                     if(BuySelectUnit.summonIndex[0] == false)
                                     {
+                                        //전장에서 보관함으로 유닛을 옮긴 경우
+                                        if (savePosition.x > rimitPos[1])
+                                        {
+                                            //보관함이 꽉 차지 않은 경우
+                                            if (currentActiveUnitNum < maxActiveUnitNum)
+                                            {
+                                                //활성화된 보관함의 수를 조정한다
+                                                BuySelectUnit.currentActiveUnitNum++;
+                                                //전장에 배치된 숫자를 조정한다
+                                                currentActiveUnitNum--;
+                                                //숫자를 조정했으니 텍스트도 변경해준다
+                                                activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
+                                            }
+                                        }
                                         target.buyUnitIndex = 0;
                                         BuySelectUnit.summonIndex[0] = true;
-                                        target.transform.position = buySelectUnit.summonPos[0];
+                                        target.transform.position = GameManager.instance.buySelectUnit.summonPos[0];
+                                        isTouch = false;
+                                        target.updownStatus = PlayerUnitManager.UpDownStatus.DOWN;
+
+
                                     }
                                     break;                            
                                 case LevelManager.SpawnColliderTag1:
                                     if (BuySelectUnit.summonIndex[1] == false)
                                     {
+                                        //전장에서 보관함으로 유닛을 옮긴 경우
+                                        if (savePosition.x > rimitPos[1])
+                                        {
+                                            //보관함이 꽉 차지 않은 경우
+                                            if (currentActiveUnitNum < maxActiveUnitNum)
+                                            {
+                                                //활성화된 보관함의 수를 조정한다
+                                                BuySelectUnit.currentActiveUnitNum++;
+                                                //전장에 배치된 숫자를 조정한다
+                                                currentActiveUnitNum--;
+                                                //숫자를 조정했으니 텍스트도 변경해준다
+                                                activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
+                                            }
+                                        }
                                         target.buyUnitIndex = 1;
                                         BuySelectUnit.summonIndex[1] = true;
-                                        target.transform.position = buySelectUnit.summonPos[1];
+                                        target.transform.position = GameManager.instance.buySelectUnit.summonPos[1];
+                                        isTouch = false;
+                                        target.updownStatus = PlayerUnitManager.UpDownStatus.DOWN;
                                     }
                                     break;                             
                                 case LevelManager.SpawnColliderTag2:
                                     if(BuySelectUnit.summonIndex[2] == false)
                                     {
+                                        //전장에서 보관함으로 유닛을 옮긴 경우
+                                        if (savePosition.x > rimitPos[1])
+                                        {
+                                            //보관함이 꽉 차지 않은 경우
+                                            if (currentActiveUnitNum < maxActiveUnitNum)
+                                            {
+                                                //활성화된 보관함의 수를 조정한다
+                                                BuySelectUnit.currentActiveUnitNum++;
+                                                //전장에 배치된 숫자를 조정한다
+                                                currentActiveUnitNum--;
+                                                //숫자를 조정했으니 텍스트도 변경해준다
+                                                activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
+                                            }
+                                        }
                                         target.buyUnitIndex = 2;
                                         BuySelectUnit.summonIndex[2] = true;
-                                        target.transform.position = buySelectUnit.summonPos[2];
+                                        target.transform.position = GameManager.instance.buySelectUnit.summonPos[2];
+                                        isTouch = false;
+                                        target.updownStatus = PlayerUnitManager.UpDownStatus.DOWN;
                                     }
                                     break;                              
                                 case LevelManager.SpawnColliderTag3:
                                     if(BuySelectUnit.summonIndex[3] == false)
                                     {
+                                        //전장에서 보관함으로 유닛을 옮긴 경우
+                                        if (savePosition.x > rimitPos[1])
+                                        {
+                                            //보관함이 꽉 차지 않은 경우
+                                            if (currentActiveUnitNum < maxActiveUnitNum)
+                                            {
+                                                //활성화된 보관함의 수를 조정한다
+                                                BuySelectUnit.currentActiveUnitNum++;
+                                                //전장에 배치된 숫자를 조정한다
+                                                currentActiveUnitNum--;
+                                                //숫자를 조정했으니 텍스트도 변경해준다
+                                                activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
+                                            }
+                                        }
                                         target.buyUnitIndex = 3;
                                         BuySelectUnit.summonIndex[3] = true;
-                                        target.transform.position = buySelectUnit.summonPos[3];
+                                        target.transform.position = GameManager.instance.buySelectUnit.summonPos[3];
+                                        isTouch = false;
+                                        target.updownStatus = PlayerUnitManager.UpDownStatus.DOWN;
                                     }
                                     break;                            
                                 case LevelManager.SpawnColliderTag4:
                                     if(BuySelectUnit.summonIndex[4] == false)
                                     {
+                                        //전장에서 보관함으로 유닛을 옮긴 경우
+                                        if (savePosition.x > rimitPos[1])
+                                        {
+                                            //보관함이 꽉 차지 않은 경우
+                                            if (currentActiveUnitNum < maxActiveUnitNum)
+                                            {
+                                                //활성화된 보관함의 수를 조정한다
+                                                BuySelectUnit.currentActiveUnitNum++;
+                                                //전장에 배치된 숫자를 조정한다
+                                                currentActiveUnitNum--;
+                                                //숫자를 조정했으니 텍스트도 변경해준다
+                                                activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
+                                            }
+                                        }
                                         target.buyUnitIndex = 4;
                                         BuySelectUnit.summonIndex[4] = true;
-                                        target.transform.position = buySelectUnit.summonPos[4];
+                                        target.transform.position = GameManager.instance.buySelectUnit.summonPos[4];
+                                        isTouch = false;
+                                        target.updownStatus = PlayerUnitManager.UpDownStatus.DOWN;
                                     }
                                     break;
                             }
-                            isTouch = false;
-                            target.updownStatus = PlayerUnitManager.UpDownStatus.DOWN;
-                            
-                            //전장에서 보관함으로 유닛을 옮긴 경우
-                            if(savePosition.x < rimitPos[1])
-                            {
-                                //보관함이 꽉 차지 않은 경우
-                                if (currentActiveUnitNum < maxActiveUnitNum)
-                                {
-                                    //활성화된 보관함의 수를 조정한다
-                                    BuySelectUnit.currentActiveUnitNum++;
-                                    //전장에 배치된 숫자를 조정한다
-                                    currentActiveUnitNum--;
-                                    //숫자를 조정했으니 텍스트도 변경해준다
-                                    activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
-                                }
-                            }
+
+
                         }
                     }
-                }
             }
         }
     }

@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8953686081734871995}
+  - component: {fileID: 3111463067039554632}
   - component: {fileID: 5822006402544518841}
   - component: {fileID: 6752285253294333001}
-  - component: {fileID: 3111463067039554632}
   m_Layer: 0
   m_Name: Arrow1Parent
   m_TagString: Bullet
@@ -35,6 +35,21 @@ Transform:
   - {fileID: 5109099810765932289}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3111463067039554632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5577993692671768689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d73ecbbb814e194cb894f195b75ecea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletVelocity: 5
+  bulletDamage: 0
+  GroupType: 0
 --- !u!50 &5822006402544518841
 Rigidbody2D:
   serializedVersion: 4
@@ -107,21 +122,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.34942824, y: 0.9611598}
   m_EdgeRadius: 0
---- !u!114 &3111463067039554632
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5577993692671768689}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d73ecbbb814e194cb894f195b75ecea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shotVelocity: 3
-  shotDamage: 0
-  GroupType: 0
 --- !u!1 &8780712094527251994
 GameObject:
   m_ObjectHideFlags: 0

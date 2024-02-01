@@ -13,13 +13,14 @@ public class EnemyUnitManager : UnitManager
     }
     override protected void Update()
     {
-        if (LevelManager.instance.currentState == StateType.NONBATTLE)
+        base.AllWaysPlayAnimation(enemyUnitStatus);
+        if (GameManager.instance.levelManager.currentState == StateType.NONBATTLE || GameManager.instance.levelManager.currentState == StateType.WAIT)
             return;
 
         var dir = base.MoveToTarget(transform,LevelManager.playerLayer,ref enemyUnitStatus);
         if(dir != Vector2.zero)
         {
-            base.SetAttackCol(ref enemyUnitStatus, dir, enemyUnitStatus.attackRange);
+            base.SetAttackCol(ref enemyUnitStatus, dir, this);
             base.SetAnmation(enemyUnitStatus, transform);
             base.Update();
         }
@@ -35,12 +36,11 @@ public class EnemyUnitManager : UnitManager
         {
             var attack = collision.transform.parent.transform.parent.GetComponent<PlayerUnitManager>();
 
-            base.SetHP(attack.playerUnitStatus.attackDamage,
+            base.SetHP(-attack.playerUnitStatus.attackDamage,
                 enemyUnitStatus);
         }
         if (collision.CompareTag(LevelManager.bulletTag))
         {
-            Debug.Log("1");
             var bullet = collision.GetComponent<BulletController>();
             if (bullet.GroupType == groupType.PLAYER)
             {

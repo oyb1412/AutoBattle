@@ -131,8 +131,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d73ecbbb814e194cb894f195b75ecea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shotVelocity: 10
-  shotDamage: 0
+  bulletVelocity: 5
+  bulletDamage: 0
   GroupType: 0
 --- !u!61 &-2868724552809212373
 BoxCollider2D:

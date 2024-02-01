@@ -14,6 +14,8 @@ TagManager:
   - SpawnCollider2
   - SpawnCollider3
   - SpawnCollider4
+  - FxTemporaire
+  - SellCollider
   layers:
   - Default
   - TransparentFX
@@ -26,7 +28,7 @@ TagManager:
   - MeleeAttack
   - SellBin
   - SpawnCollider
-  - 
+  - SellCollider
   - 
   - 
   - 
