@@ -18,6 +18,13 @@ public class LevelManager : MonoBehaviour
     public const string enemyMeleeAttackTag = "EnemyMeleeAttack";
     public const string playerMeleeAttackTag = "PlayerMeleeAttack";
     public const string bulletTag = "Bullet";
+    public const string SpawnColliderLayer = "SpawnCollider";
+    public const string SellBinTagNLayer = "SellBin";
+    public const string SpawnColliderTag0 = "SpawnCollider0";
+    public const string SpawnColliderTag1 = "SpawnCollider1";
+    public const string SpawnColliderTag2 = "SpawnCollider2";
+    public const string SpawnColliderTag3 = "SpawnCollider3";
+    public const string SpawnColliderTag4 = "SpawnCollider4";
 
     [Header("NextStageGameObject")]
     [SerializeField] GameObject doNextStageBtn;
@@ -29,7 +36,10 @@ public class LevelManager : MonoBehaviour
     public const int sellCost = 5;
     //리롤 시 비용
     public const int reRullCost = 2;
-
+    //유닛 최대 레벨
+    public const int maxLevel = 5;
+    //유닛 합성 조건 수
+    public const int mixNum = 3;
     //현재 라운드
     [HideInInspector]public int currentRound;
 

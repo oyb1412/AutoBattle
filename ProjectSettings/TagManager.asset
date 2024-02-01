@@ -9,6 +9,11 @@ TagManager:
   - PlayerMeleeAttack
   - Bullet
   - SellBin
+  - SpawnCollider0
+  - SpawnCollider1
+  - SpawnCollider2
+  - SpawnCollider3
+  - SpawnCollider4
   layers:
   - Default
   - TransparentFX
@@ -20,7 +25,7 @@ TagManager:
   - EnemyUnit
   - MeleeAttack
   - SellBin
-  - 
+  - SpawnCollider
   - 
   - 
   - 

@@ -48,7 +48,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77ff66c7632e99f48a526e69cb689e94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationTrigger: 0
   playerUnitStatus:
     currentUnitType: 2
     currentUnitState: 0
@@ -60,6 +59,7 @@ MonoBehaviour:
     attackDamage: 5
     attackRange: 13
     minDistance: 13
+    level: 0
     attackCollider: {fileID: 0}
     attackBullet: {fileID: 1286065714712430062, guid: 358e89a7c55ccc545ad13970b42788ee, type: 3}
     levelStar: {fileID: 0}
@@ -67,8 +67,7 @@ MonoBehaviour:
     firePos: {fileID: 7808038314856112209}
   updownStatus: 0
   buyUnitIndex: 0
-  buyCost: 0
-  sellCost: 0
+  unitSmallType: 8
 --- !u!212 &4091424346719795701
 SpriteRenderer:
   m_ObjectHideFlags: 0

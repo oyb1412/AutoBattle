@@ -27,6 +27,7 @@ public class UnitManager : MonoBehaviour
        public float attackDamage;
        public float attackRange;
        public float minDistance;
+       public int level;
        public Collider2D attackCollider;
        public GameObject attackBullet;
        public GameObject levelStar;
@@ -54,7 +55,7 @@ public class UnitManager : MonoBehaviour
     //가장 가까운 적 저장용 오브젝트
     UnitManager target;
 
-    //한번 실행용 트리거
+    //단수 실행용 트리거
     bool attackTrigger;
     bool animationTrigger;
 

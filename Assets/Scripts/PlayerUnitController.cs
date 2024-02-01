@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 public class PlayerUnitController : MonoBehaviour
 {
     //유닛 터치상태 판단
@@ -30,8 +31,8 @@ public class PlayerUnitController : MonoBehaviour
     const int maxActiveUnitNum = 9;
 
     Vector2 savePosition;
-
-    
+    //보관함 위치를 특정하기 위한 오브젝트
+    [SerializeField] BuySelectUnit buySelectUnit;
 
     private void Start()
     {
@@ -115,7 +116,7 @@ public class PlayerUnitController : MonoBehaviour
                 if (target.transform.position.x < rimitPos[1])
                 {
                     //현재 마우스의 위치가 쓰레기통일 경우
-                    if (MouseRayCast("SellBin", "SellBin") != null)
+                    if (MouseRayCast(LevelManager.SellBinTagNLayer, LevelManager.SellBinTagNLayer) != null)
                     {
                         isTouch = false;
                         target.updownStatus = PlayerUnitManager.UpDownStatus.DOWN;
@@ -128,8 +129,79 @@ public class PlayerUnitController : MonoBehaviour
                         //유닛을 삭제한다
                         Destroy(target.gameObject);
                     }
+                    //현재 마우스의 위치가 보관함일 경우
+                    if(MouseRayCast(LevelManager.SpawnColliderLayer) != null)
+                    {
+                        var col = MouseRayCast(LevelManager.SpawnColliderLayer);
+                        //보관함이 null이 아닐때
+                        if (col != null)
+                        {
+                            //유닛이 있던 보관함을 비워준다
+                            BuySelectUnit.summonIndex[target.buyUnitIndex] = false;
+                            //선택한 보관함을 태그로 구별
+                            switch (col.tag)
+                            {
+                                case LevelManager.SpawnColliderTag0:
+                                    if(BuySelectUnit.summonIndex[0] == false)
+                                    {
+                                        target.buyUnitIndex = 0;
+                                        BuySelectUnit.summonIndex[0] = true;
+                                        target.transform.position = buySelectUnit.summonPos[0];
+                                    }
+                                    break;                            
+                                case LevelManager.SpawnColliderTag1:
+                                    if (BuySelectUnit.summonIndex[1] == false)
+                                    {
+                                        target.buyUnitIndex = 1;
+                                        BuySelectUnit.summonIndex[1] = true;
+                                        target.transform.position = buySelectUnit.summonPos[1];
+                                    }
+                                    break;                             
+                                case LevelManager.SpawnColliderTag2:
+                                    if(BuySelectUnit.summonIndex[2] == false)
+                                    {
+                                        target.buyUnitIndex = 2;
+                                        BuySelectUnit.summonIndex[2] = true;
+                                        target.transform.position = buySelectUnit.summonPos[2];
+                                    }
+                                    break;                              
+                                case LevelManager.SpawnColliderTag3:
+                                    if(BuySelectUnit.summonIndex[3] == false)
+                                    {
+                                        target.buyUnitIndex = 3;
+                                        BuySelectUnit.summonIndex[3] = true;
+                                        target.transform.position = buySelectUnit.summonPos[3];
+                                    }
+                                    break;                            
+                                case LevelManager.SpawnColliderTag4:
+                                    if(BuySelectUnit.summonIndex[4] == false)
+                                    {
+                                        target.buyUnitIndex = 4;
+                                        BuySelectUnit.summonIndex[4] = true;
+                                        target.transform.position = buySelectUnit.summonPos[4];
+                                    }
+                                    break;
+                            }
+                            isTouch = false;
+                            target.updownStatus = PlayerUnitManager.UpDownStatus.DOWN;
+                            
+                            //전장에서 보관함으로 유닛을 옮긴 경우
+                            if(savePosition.x < rimitPos[1])
+                            {
+                                //보관함이 꽉 차지 않은 경우
+                                if (currentActiveUnitNum < maxActiveUnitNum)
+                                {
+                                    //활성화된 보관함의 수를 조정한다
+                                    BuySelectUnit.currentActiveUnitNum++;
+                                    //전장에 배치된 숫자를 조정한다
+                                    currentActiveUnitNum--;
+                                    //숫자를 조정했으니 텍스트도 변경해준다
+                                    activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
+                                }
+                            }
+                        }
+                    }
                 }
-                //유닛을 집은 후 보관함으로 이동시키거나 보관함끼리 변경(제작예정)
             }
         }
     }
@@ -145,4 +217,19 @@ public class PlayerUnitController : MonoBehaviour
         else
             return null;
     }
+
+    public Collider2D MouseRayCast(string layer)
+    {
+        RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero, 0f, LayerMask.GetMask(layer));
+
+        if (hit.collider != null)
+        {
+            return hit.collider;
+        }
+        else
+            return null;
+    }
+
+
+
 }

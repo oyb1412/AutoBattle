@@ -49,26 +49,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77ff66c7632e99f48a526e69cb689e94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationTrigger: 0
   playerUnitStatus:
     currentUnitType: 0
     currentUnitState: 0
     currentUnitGroup: 0
     currentHP: 0
-    maxHP: 0
-    moveSpeed: 0
-    attackSpeed: 0
-    attackDamage: 0
+    maxHP: 3
+    moveSpeed: 3
+    attackSpeed: 2
+    attackDamage: 2
     attackRange: 0.5
     minDistance: 1
+    level: 0
     attackCollider: {fileID: 2921467350519887112}
     attackBullet: {fileID: 0}
     levelStar: {fileID: 0}
     hpBar: {fileID: 0}
+    firePos: {fileID: 0}
   updownStatus: 0
   buyUnitIndex: 0
-  buyCost: 0
-  sellCost: 0
+  unitSmallType: 1
 --- !u!212 &1269740537038417258
 SpriteRenderer:
   m_ObjectHideFlags: 0

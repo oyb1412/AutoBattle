@@ -15,7 +15,7 @@ public class BuySelectUnit : MonoBehaviour
 
     //보관 위치 5곳의 위치벡터
     [Header("SummonPosition")]
-    [SerializeField] Vector2[] summonPos;
+    [SerializeField]public Vector2[] summonPos;
 
     //생성한 유닛들의 부모 오브젝트(더미)
     [Header("ObjectParent")]
@@ -27,15 +27,22 @@ public class BuySelectUnit : MonoBehaviour
 
     //보관함의 유닛의 유무 판단용 bool
     public static bool[] summonIndex;
-
     [SerializeField] PlayerUnitController playerUnitController;
 
-
+    public bool[] save;
+    public int save2;
+    //유닛 믹스 체크를 위한 오브젝트
+    [SerializeField] MixUnitManager mixUnitManager;
     private void Awake()
     {
         summonIndex = new bool[5];
+        save = new bool[5];
     }
-
+    private void Update()
+    {
+        save = summonIndex;
+        save2 = currentActiveUnitNum;
+    }
     /// <summary>
     /// 유닛 아이콘 클릭시 작동하는 유닛 구입 함수
     /// </summary>
@@ -58,25 +65,20 @@ public class BuySelectUnit : MonoBehaviour
         //현재 보관중인 유닛 수가 최대 보관 가능한 유닛 수보다 적을때만 소환
         if (currentActiveUnitNum < showRandomUnit.showMaxUnit)
         {
+
             var unit = Instantiate(unitPrefabs[index], summonPos[saveIndex], Quaternion.identity, createObjectParent);
             unit.GetComponent<PlayerUnitManager>().buyUnitIndex = saveIndex;
             summonIndex[saveIndex] = true;
             currentActiveUnitNum++;
             LevelManager.instance.SetGold(-LevelManager.buyCost);
+            mixUnitManager.CheckUnitMix();
+
         }
         else
         {
             //유닛이 꽉 찼으므로 UI등으로 경고 표시
         }
 
-        MixUnit();
     }
-    /// <summary>
-    /// 전장과 보관함에 같은 종류, 같은 레벨의 유닛이 3체 이상 있을 시
-    /// 유닛을 합체하는 함수(제작예정)
-    /// </summary>
-    void MixUnit()
-    {
 
-    }
 }
