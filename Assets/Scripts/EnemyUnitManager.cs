@@ -1,52 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using DG.Tweening;
 public class EnemyUnitManager : UnitManager
 {
-    [Header("UnitStatus")]
-    public UnitStatus enemyUnitStatus;
 
-    private void Start()
-    {
-        enemyUnitStatus.currentHP = enemyUnitStatus.maxHP;
-    }
+
+    //스턴 타이머
+    float stunTimer;
+    //스턴 이펙트
+    public ParticleSystem stunEffect;
     override protected void Update()
     {
-        base.AllWaysPlayAnimation(enemyUnitStatus);
-        if (GameManager.instance.levelManager.currentState == StateType.NONBATTLE || GameManager.instance.levelManager.currentState == StateType.WAIT)
-            return;
-
-        var dir = base.MoveToTarget(transform,LevelManager.playerLayer,ref enemyUnitStatus);
-        if(dir != Vector2.zero)
+        if (GameManager.instance.levelManager.currentState == StateType.BATTLE)
         {
-            base.SetAttackCol(ref enemyUnitStatus, dir, this);
-            base.SetAnmation(enemyUnitStatus, transform);
-            base.Update();
+            base.MoveToTarget(LevelManager.playerLayer);
         }
-
-    }
-
-    /// <summary>
-    /// 유닛 본체에서 공격에 대한 충돌판정 진행
-    /// </summary>
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag(LevelManager.playerMeleeAttackTag))
+        if (isStun)
         {
-            var attack = collision.transform.parent.transform.parent.GetComponent<PlayerUnitManager>();
-
-            base.SetHP(-attack.playerUnitStatus.attackDamage,
-                enemyUnitStatus);
-        }
-        if (collision.CompareTag(LevelManager.bulletTag))
-        {
-            var bullet = collision.GetComponent<BulletController>();
-            if (bullet.GroupType == groupType.PLAYER)
+            stunTimer += Time.deltaTime;
+            if(stunTimer > 1f)
             {
-                base.SetHP(-bullet.bulletDamage, enemyUnitStatus);
-                Destroy(bullet.gameObject);
+                isStun = false;
+                stunTimer = 0;
             }
         }
+
+        base.Update();
     }
 }

@@ -65,12 +65,13 @@ public class BuySelectUnit : MonoBehaviour
         {
             var unit = Instantiate(unitPrefabs[index], summonPos[saveIndex], Quaternion.identity, createObjectParent);
             unit.GetComponent<PlayerUnitManager>().buyUnitIndex = saveIndex;
-            unit.GetComponent<PlayerUnitManager>().playerUnitStatus.currentUnitState = unitState.WAIT;
+            unit.GetComponent<PlayerUnitManager>().currentUnitState = unitState.WAIT;
             summonIndex[saveIndex] = true;
             currentActiveUnitNum++;
             GameManager.instance.levelManager.SetGold(-LevelManager.buyCost);
-            GameManager.instance.mixUnitManager.CheckUnitMix();
             GameManager.instance.showRandomUnit.ShowRandomUnitImage();
+            GameManager.instance.mixUnitManager.CheckUnitMix();
+
         }
         else
         {

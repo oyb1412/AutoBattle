@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_Sprite: {fileID: 1835509526, guid: f9ba2a0f8969a0a4eac4c97832a394c2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -133,7 +133,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletVelocity: 5
   bulletDamage: 0
-  GroupType: 0
+  unitGroup: 0
+  attackEffect: {fileID: 4743541446132801517, guid: 01b56868948ee8f4093ebaff0ad292e0, type: 3}
 --- !u!61 &8378951824094953618
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -166,7 +167,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 8.559231, y: -9.784659}
+  m_Offset: {x: 0.002762407, y: 0.096687794}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}

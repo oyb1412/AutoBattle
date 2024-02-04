@@ -16,6 +16,7 @@ TagManager:
   - SpawnCollider4
   - FxTemporaire
   - SellCollider
+  - Item
   layers:
   - Default
   - TransparentFX
@@ -29,7 +30,7 @@ TagManager:
   - SellBin
   - SpawnCollider
   - SellCollider
-  - 
+  - Item
   - 
   - 
   - 

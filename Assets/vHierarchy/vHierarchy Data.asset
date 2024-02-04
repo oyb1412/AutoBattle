@@ -1,0 +1,129 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a9752b0c8e144801967e6897679604b, type: 3}
+  m_Name: vHierarchy Data
+  m_EditorClassIdentifier: 
+  sceneDatas_byGuid:
+    keys:
+    - 2cda990e2423bbf4892e6590ba056729
+    values:
+    - goDatas_byGlobalId:
+        keys:
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-140160368-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1255685132-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-2014983610-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1082800878-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-519420028-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1977621747-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1575980618-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1409321020-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-346373108-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-827413311-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1498696000-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1454232331-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-892177404-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1701792397-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1959020021-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-257543600-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1357362794-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1040870359-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-312501083-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1424015196-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1229534525-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-78911101-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-536774960-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1866128266-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-350199320-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1048273272-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-979983286-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-237016094-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-31371358-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1853859924-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-503389575-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1701410406-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1426473896-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1665406336-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-136928882-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-2913910368281017467-0
+        values:
+        - colorIndex: 6
+          iconNameOrGuid: LightmapParameters Icon
+        - colorIndex: 2
+          iconNameOrGuid: Settings Icon
+        - colorIndex: 2
+          iconNameOrGuid: Settings Icon
+        - colorIndex: 1
+          iconNameOrGuid: Settings Icon
+        - colorIndex: 1
+          iconNameOrGuid: Camera Icon
+        - colorIndex: 2
+          iconNameOrGuid: Settings Icon
+        - colorIndex: 1
+          iconNameOrGuid: MeshCollider Icon
+        - colorIndex: 1
+          iconNameOrGuid: MeshCollider Icon
+        - colorIndex: 1
+          iconNameOrGuid: MeshCollider Icon
+        - colorIndex: 1
+          iconNameOrGuid: MeshCollider Icon
+        - colorIndex: 1
+          iconNameOrGuid: BoxCollider Icon
+        - colorIndex: 1
+          iconNameOrGuid: BoxCollider Icon
+        - colorIndex: 1
+          iconNameOrGuid: Settings Icon
+        - colorIndex: 0
+          iconNameOrGuid: MeshCollider Icon
+        - colorIndex: 0
+          iconNameOrGuid: MeshCollider Icon
+        - colorIndex: 0
+          iconNameOrGuid: MeshCollider Icon
+        - colorIndex: 0
+          iconNameOrGuid: MeshCollider Icon
+        - colorIndex: 0
+          iconNameOrGuid: MeshCollider Icon
+        - colorIndex: 0
+          iconNameOrGuid: MeshCollider Icon
+        - colorIndex: 0
+          iconNameOrGuid: MeshCollider Icon
+        - colorIndex: 0
+          iconNameOrGuid: MeshCollider Icon
+        - colorIndex: 0
+          iconNameOrGuid: MeshCollider Icon
+        - colorIndex: 0
+          iconNameOrGuid: BoxCollider Icon
+        - colorIndex: 0
+          iconNameOrGuid: BoxCollider Icon
+        - colorIndex: 0
+          iconNameOrGuid: BoxCollider Icon
+        - colorIndex: 0
+          iconNameOrGuid: BoxCollider Icon
+        - colorIndex: 0
+          iconNameOrGuid: BoxCollider Icon
+        - colorIndex: 0
+          iconNameOrGuid: MeshCollider Icon
+        - colorIndex: 6
+          iconNameOrGuid: LightmapParameters Icon
+        - colorIndex: 0
+          iconNameOrGuid: LightmapParameters Icon
+        - colorIndex: 0
+          iconNameOrGuid: LightmapParameters Icon
+        - colorIndex: 0
+          iconNameOrGuid: LightmapParameters Icon
+        - colorIndex: 1
+          iconNameOrGuid: LightmapParameters Icon
+        - colorIndex: 1
+          iconNameOrGuid: LightmapParameters Icon
+        - colorIndex: 1
+          iconNameOrGuid: LightmapParameters Icon
+        - colorIndex: 1
+          iconNameOrGuid: LightmapParameters Icon

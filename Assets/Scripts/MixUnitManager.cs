@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
-
+using DG.Tweening;
+using System.Collections;
 public class MixUnitManager : MonoBehaviour
 {
 
@@ -19,36 +21,55 @@ public class MixUnitManager : MonoBehaviour
 
         //활성화된 모든 유닛을 호출
         var obj = GameObject.FindGameObjectsWithTag(LevelManager.playerTag);
-
-        for (int i = 0; i <obj.Length; i++)
+        if (obj.Length > 2)
         {
-            //unit리스트에 모든 유닛을 대입
-            units.Add(obj[i].GetComponent<PlayerUnitManager>());
-        }
+            for (int i = 0; i < obj.Length; i++)
+            {
+                //unit리스트에 모든 유닛을 대입
+                units.Add(obj[i].GetComponent<PlayerUnitManager>());
+            }
 
-        for (int j = 0; j < LevelManager.maxLevel; j++)
-        {
-            //레벨이 같은 유닛을 리스트로 저장
-            num = units.FindAll(x => x.playerUnitStatus.level == j + 1).ToList();
+            for (int j = 1; j < LevelManager.maxLevel; j++)
+            {
+                //레벨이 같은 유닛을 리스트로 저장
+                num = units.FindAll(x => x.level == 1);
+                if (num.Count > 2)
+                    break;
+            }
             if (num.Count > 2)
-                break;
-        }
-        for (int i = 0; i <= (int)UnitSmallType.MAGE2; i++)
-        {
-            //레벨이 같은 유닛 중에서 타입이 같은 유닛을 리스트로 저장
-            typeEndNum = num.FindAll(x => x.unitSmallType == (UnitSmallType)i).ToList();
-            if (typeEndNum.Count > 2)
-                break;
-        }
+            {
+                for (int i = 0; i <= (int)playerUnitType.MAGE2; i++)
+                {
+                    //레벨이 같은 유닛 중에서 타입이 같은 유닛을 리스트로 저장
+                    typeEndNum = num.FindAll(x => x.playerUnitType == (playerUnitType)i).ToList();
+                    if (typeEndNum.Count > 2)
+                        break;
+                }
 
-        //레벨,종류가 같은 유닛이 3체 이상 있을 시
-        if (typeEndNum.Count >= LevelManager.mixNum)
-        {
-            //재료 제거
-            DestroyUnit(typeEndNum);
-            //합성
-            UnitLevelUp(typeEndNum);
+                if (typeEndNum.Count > 2)
+                {
+                    //레벨,종류가 같은 유닛이 3체 이상 있을 시
+                    if (typeEndNum.Count >= LevelManager.mixNum)
+                    {
+                        StartCoroutine(MixedUnitCorutine(typeEndNum, 1f));
+                    }
+                }
+            }
+
         }
+    }
+
+    IEnumerator MixedUnitCorutine(List<PlayerUnitManager> units, float time)
+    {
+        units[1].transform.DOMove(units[0].transform.position, time);
+        units[2].transform.DOMove(units[0].transform.position, time);
+
+        units[1].transform.DOScale(Vector2.zero, time);
+        units[2].transform.DOScale(Vector2.zero, time);
+
+        yield return new WaitForSeconds(time);
+        UnitLevelUp(units);
+        DestroyUnit(units);
     }
 
     void DestroyUnit(List<PlayerUnitManager> unit)
@@ -64,13 +85,12 @@ public class MixUnitManager : MonoBehaviour
                 BuySelectUnit.currentActiveUnitNum--;
 
             //재료로 소모된 유닛 삭제
+            unit[i].DeleteOtherObject();
             Destroy(unit[i].gameObject);
-
         }
     }
     void UnitLevelUp(List<PlayerUnitManager> unit)
     {
-        //유닛 레벨업 함수 호출
         unit[0].UnitLevelUp();
     }
 }
