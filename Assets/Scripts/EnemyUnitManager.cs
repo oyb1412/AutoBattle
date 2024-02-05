@@ -10,8 +10,14 @@ public class EnemyUnitManager : UnitManager
     float stunTimer;
     //Ω∫≈œ ¿Ã∆Â∆Æ
     public ParticleSystem stunEffect;
+
+
+
     override protected void Update()
     {
+        if (currentUnitState == unitState.DIE)
+            return;
+
         if (GameManager.instance.levelManager.currentState == StateType.BATTLE)
         {
             base.MoveToTarget(LevelManager.playerLayer);

@@ -110,18 +110,23 @@ public class PlayerUnitController : MonoBehaviour
                     currentActiveUnitNum < maxActiveUnitNum)
                 {
 
+                    //유닛을 보관함에서 전장으로 옮겼을 경우에만
+                    if(savePosition.x < rimitPos[1])
+                    {
+                        //유닛이 있던 보관함을 비워준다
+                        BuySelectUnit.summonIndex[target.buyUnitIndex] = false;
+                        //활성화된 보관함의 수를 조정한다
+                        BuySelectUnit.currentActiveUnitNum--;
+                        //전장에 배치된 숫자를 조정한다
+                        currentActiveUnitNum++;
+                        //숫자를 조정했으니 텍스트도 변경해준다
+                        activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
+
+                        SynageSet(1);
+                    }
                     //유닛의 상태를 wait로 변경
                     target.currentUnitState = unitState.WAIT;
-                    //유닛이 있던 보관함을 비워준다
-                    BuySelectUnit.summonIndex[target.buyUnitIndex] = false;
-                    //활성화된 보관함의 수를 조정한다
-                    BuySelectUnit.currentActiveUnitNum--;
-                    //전장에 배치된 숫자를 조정한다
-                    currentActiveUnitNum++;
-                    //숫자를 조정했으니 텍스트도 변경해준다
-                    activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
-
-                    SynageTextSet(1);
+ 
                     touchDelay = 0;
                     isTouch = false;
                 }
@@ -137,13 +142,18 @@ public class PlayerUnitController : MonoBehaviour
                         BuySelectUnit.currentActiveUnitNum--;
                         //유닛 판매가만큼 골드를 얻는다
                         GameManager.instance.levelManager.SetGold(LevelManager.sellCost);
+
+                        //유닛이 아이템을 가진 상태면 아이템 드랍
+                        target.ClearItem();
+                        //유닛이 지닌 모든 오브젝트 삭제
+                        target.DeleteOtherObject();
                         //유닛을 삭제한다
                         target.currentUnitState = unitState.DIE;
 
                         //전장에서 쓰레기통으로 유닛을 옮긴 경우
                         if (savePosition.x > rimitPos[1])
                         {
-                            SynageTextSet(-1);
+                            SynageSet(-1);
 
                         }
                 }
@@ -198,7 +208,7 @@ public class PlayerUnitController : MonoBehaviour
                                                 currentActiveUnitNum--;
                                                 //숫자를 조정했으니 텍스트도 변경해준다
                                                 activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
-                                            SynageTextSet(-1);
+                                            SynageSet(-1);
                                         }
                                     }
                                         target.buyUnitIndex = 1;
@@ -225,7 +235,7 @@ public class PlayerUnitController : MonoBehaviour
                                                 activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
 
                                             //시너지 조정
-                                            SynageTextSet(-1);
+                                            SynageSet(-1);
 
                                         }
                                     }
@@ -251,7 +261,7 @@ public class PlayerUnitController : MonoBehaviour
                                                 currentActiveUnitNum--;
                                                 //숫자를 조정했으니 텍스트도 변경해준다
                                                 activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
-                                            SynageTextSet(-1);
+                                            SynageSet(-1);
                                         }
                                     }
                                         target.buyUnitIndex = 3;
@@ -277,7 +287,7 @@ public class PlayerUnitController : MonoBehaviour
                                                 //숫자를 조정했으니 텍스트도 변경해준다
                                                 activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
 
-                                            SynageTextSet(-1);
+                                            SynageSet(-1);
 
                                             
                                             }
@@ -298,95 +308,95 @@ public class PlayerUnitController : MonoBehaviour
     }
 
     //시너지 텍스트 표시와 수치 변경(유닛을 배치할 때마다 실행)
-    void SynageTextSet(int index)
+    public void SynageSet(int index)
     {
-        //시너지 조정
+        //전장에 배치하거나 해제한 유닛의 타입에 따라 시너지 숫자 변경
         switch (target.currentUnitType)
         {
             case unitType.MELEE:
-                activeUnitTypeNum[0] += index;
+                activeUnitTypeNum[(int)unitType.MELEE] += index;
                 break;
             case unitType.RANGE:
-                activeUnitTypeNum[1] += index;
+                activeUnitTypeNum[(int)unitType.RANGE] += index;
                 break;
             case unitType.MAGE:
-                activeUnitTypeNum[2] += index;
+                activeUnitTypeNum[(int)unitType.MAGE] += index;
                 break;
         }
+        //시너지 숫자 변경에 따른 텍스트 업데이트
         for(int i = 0;i<3;i++)
         {
             synageLevel[i] = activeUnitTypeNum[i] / 3;
                         synageLevelText[i].text = synageLevel[i] + "레벨";
             synageNumText[i].text = activeUnitTypeNum[i] + "/ 9";
         }
-        if (synageLevel[0] > 0 || synageLevel[1] > 0 || synageLevel[2] > 0)
-        {
+        
             var unit = GameObject.FindGameObjectsWithTag("Player");
             for(int i = 0;i<unit.Length;i++)
             {
-                if (unit[i].GetComponent<PlayerUnitManager>().currentUnitType == unitType.MELEE)
+                var player = unit[i].GetComponent<PlayerUnitManager>();
+
+                if (player.currentUnitType == unitType.MELEE)
                 {
-                    switch (synageLevel[0])
+                    switch (synageLevel[(int)unitType.MELEE])
                     {
+                        case 0:
+                             player.attackDamage = player.saveAttackDamage;
+                        break;
                         case 1:
-                            unit[i].GetComponent<PlayerUnitManager>().attackDamage = unit[i].GetComponent<PlayerUnitManager>().saveAttackDamage * 1 +
-                                (0.01f * data[0].upAttackDamage[1]);
-                            break;
+                            player.attackDamage = player.saveAttackDamage * (1 + (0.01f * data[(int)unitType.MELEE].upAttackDamage[1]));
+                        break;
                         case 2:
-                            unit[i].GetComponent<PlayerUnitManager>().attackDamage = unit[i].GetComponent<PlayerUnitManager>().saveAttackDamage * 1 +
-                                 (0.01f * data[0].upAttackDamage[2]);
+                            player.attackDamage = player.saveAttackDamage * (1 + (0.01f * data[(int)unitType.MELEE].upAttackDamage[2]));
                             break;
                         case 3:
-                            unit[i].GetComponent<PlayerUnitManager>().attackDamage = unit[i].GetComponent<PlayerUnitManager>().saveAttackDamage * 1 +
-                                 (0.01f * data[0].upAttackDamage[3]);
+                            player.attackDamage = player.saveAttackDamage * (1 + (0.01f * data[(int)unitType.MELEE].upAttackDamage[3]));
                             break;
                     }
                 }
-                else if(unit[i].GetComponent<PlayerUnitManager>().currentUnitType == unitType.RANGE)
+                else if(player.currentUnitType == unitType.RANGE)
                 {
-                    switch (synageLevel[1])
+                    switch (synageLevel[(int)unitType.RANGE])
                     {
+                         case 0:
+                            player.attackSpeed = player.saveAttackSpeed;
+                            player.attackRange = player.saveAttackRange;
+                            break;
                         case 1:
-                            unit[i].GetComponent<PlayerUnitManager>().attackSpeed = unit[i].GetComponent<PlayerUnitManager>().saveAttackSpeed * 1 +
-                                (0.01f * data[1].upAttackSpeed[1]);
-                            unit[i].GetComponent<PlayerUnitManager>().attackRange = unit[i].GetComponent<PlayerUnitManager>().saveAttackRange * 1 +
-                                (0.01f * data[1].upAttackRange[1]);
+                            player.attackSpeed = player.saveAttackSpeed * (1 +  (0.01f * data[(int)unitType.RANGE].upAttackSpeed[1]));
+                            player.attackRange = player.saveAttackRange * (1 + (0.01f * data[(int)unitType.RANGE].upAttackRange[1]));
                             break;
                         case 2:
-                            unit[i].GetComponent<PlayerUnitManager>().attackSpeed = unit[i].GetComponent<PlayerUnitManager>().saveAttackSpeed * 1 +
-                                 (0.01f * data[1].upAttackSpeed[2]);
-                            unit[i].GetComponent<PlayerUnitManager>().attackRange = unit[i].GetComponent<PlayerUnitManager>().saveAttackRange * 1 +
-                                (0.01f * data[1].upAttackRange[2]);
+                            player.attackSpeed = player.saveAttackSpeed * (1 + (0.01f * data[(int)unitType.RANGE].upAttackSpeed[2]));
+                            player.attackRange = player.saveAttackRange * (1 +  (0.01f * data[(int)unitType.RANGE].upAttackRange[2]));
                             break;
                         case 3:
-                            unit[i].GetComponent<PlayerUnitManager>().attackSpeed = unit[i].GetComponent<PlayerUnitManager>().saveAttackSpeed * 1 +
-                                  (0.01f * data[1].upAttackSpeed[3]);
-                            unit[i].GetComponent<PlayerUnitManager>().attackRange = unit[i].GetComponent<PlayerUnitManager>().saveAttackRange * 1 +
-                                 (0.01f * data[1].upAttackRange[3]);
+                            player.attackSpeed = player.saveAttackSpeed * (1 +  (0.01f * data[(int)unitType.RANGE].upAttackSpeed[3]));
+                            player.attackRange = player.saveAttackRange * (1 + (0.01f * data[(int)unitType.RANGE].upAttackRange[3]));
                             break;
                     }
                 }
                 else
                 {
-                    switch (synageLevel[2])
+                    switch (synageLevel[(int)unitType.MAGE])
                     {
-                        case 1:
-                            unit[i].GetComponent<PlayerUnitManager>().attackDamage = unit[i].GetComponent<PlayerUnitManager>().saveAttackDamage * 1 +
-                             (0.01f * data[2].downResistance[1]);
+                         case 0:
+                            player.attackDamage = player.saveAttackDamage;
+                            break;
+                         case 1:
+                            player.attackDamage = player.saveAttackDamage * (1 + (0.01f * data[(int)unitType.MAGE].downResistance[1]));
                             break;
                         case 2:
-                            unit[i].GetComponent<PlayerUnitManager>().attackDamage = unit[i].GetComponent<PlayerUnitManager>().saveAttackDamage * 1 +
-                             (0.01f * data[2].downResistance[2]);
+                            player.attackDamage = player.saveAttackDamage * (1 + (0.01f * data[(int)unitType.MAGE].downResistance[2]));
                             break;
                         case 3:
-                            unit[i].GetComponent<PlayerUnitManager>().attackDamage = unit[i].GetComponent<PlayerUnitManager>().saveAttackDamage * 1 +
-                             (0.01f * data[2].downResistance[3]);
+                            player.attackDamage = player.saveAttackDamage * (1 + (0.01f * data[(int)unitType.MAGE].downResistance[3]));
                             break;
                     }
                 }
             }
 
-        }
+        
     }
 
 

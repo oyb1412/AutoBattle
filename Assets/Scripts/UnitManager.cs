@@ -54,6 +54,12 @@ public class UnitManager : MonoBehaviour
    //유닛의 공격 사거리 저장
    public float saveAttackRange;
 
+    //유닛의 최대 체력 저장
+    public float saveMaxHp;  
+
+    //유닛의 이동 속도 저장
+   public float saveMoveSpeed;
+
     //유닛의 공격 관통 횟수
     public int count;
 
@@ -125,6 +131,8 @@ public class UnitManager : MonoBehaviour
         saveAttackDamage = attackDamage;
         saveAttackSpeed = attackSpeed;
         saveAttackRange = attackRange;
+        saveMaxHp = maxHP;
+        saveMoveSpeed = moveSpeed;
         currentHP = maxHP;
     }
     virtual protected void Update()
@@ -137,10 +145,10 @@ public class UnitManager : MonoBehaviour
         else
             isJump = false;
 
-        if(GameManager.instance.levelManager.currentState == StateType.NONBATTLE)
-        {
-            currentUnitState = unitState.WAIT;
-        }
+        //if(GameManager.instance.levelManager.currentState == StateType.NONBATTLE)
+        //{
+        //    currentUnitState = unitState.WAIT;
+        //}
         anime.SetBool("Run", isMove);
         anime.SetBool("Jump", isJump);
         ShowHpSlider();
@@ -156,11 +164,14 @@ public class UnitManager : MonoBehaviour
             {
                 player = GameManager.instance.MouseRayCast("Player", "PlayerUnit").GetComponent<PlayerUnitManager>();
                 player.saveSlider.gameObject.SetActive(true);
-                player.saveSlider.value = currentHP / maxHP;
+                player.saveSlider.value = player.currentHP / player.maxHP;
                 player.saveSlider.transform.position = Camera.main.WorldToScreenPoint(new Vector3(player.transform.position.x, player.transform.position.y + 1.4f, player.transform.position.z));
             }
             else if (player != null)
+            {
+                if(player.saveSlider != null)
                 player.saveSlider.gameObject.SetActive(false);
+            }
         }
         else
         {
@@ -168,12 +179,13 @@ public class UnitManager : MonoBehaviour
             {
                 enemy = GameManager.instance.MouseRayCast("Enemy", "EnemyUnit").GetComponent<EnemyUnitManager>();
                 enemy.saveSlider.gameObject.SetActive(true);
-                enemy.saveSlider.value = currentHP / maxHP;
+                enemy.saveSlider.value = enemy.currentHP / enemy.maxHP;
                 enemy.saveSlider.transform.position = Camera.main.WorldToScreenPoint(new Vector3(enemy.transform.position.x, enemy.transform.position.y + 1.4f, enemy.transform.position.z)); 
             }
             else if (enemy != null)
             {
-                enemy.saveSlider.gameObject.SetActive(false);
+                if(enemy.saveSlider != null)
+                    enemy.saveSlider.gameObject.SetActive(false);
             }
         }
     }
@@ -195,16 +207,17 @@ public class UnitManager : MonoBehaviour
                     isJump = false;
                 }
                 break;
-            case unitState.DIE:
-                if (!isDie)
-                {
-                    dustEffect.Stop();
-                    isAttack = false;
-                    isMove = false;
-                    isJump = false;
-                    StartCoroutine(DieCorutine());
-                }
-                break;
+            //case unitState.DIE:
+            //    if (!isDie)
+            //    {
+            //        dustEffect.Stop();
+            //        isAttack = false;
+            //        isMove = false;
+            //        isJump = false;
+            //        Debug.Log("1");
+            //        StartCoroutine(DieCorutine());
+            //    }
+            //    break;
             case unitState.ATTACK:
                 if(!isAttack && target != null)
                 {
@@ -223,6 +236,7 @@ public class UnitManager : MonoBehaviour
                 if(!isJump)
                 {
                     isJump = true;
+                    dustEffect.Stop();
                 }
                 break;
         }
@@ -250,22 +264,27 @@ public class UnitManager : MonoBehaviour
         anime.SetTrigger("Attack");
         isAttack = true;
         yield return shottime;
-        var dir = target.transform.position - firePos.transform.position;
-        var arrow = Instantiate(attackBullet, firePos.transform);
-        if (currentUnitGroup == unitGroup.PLAYER)
-            arrow.GetComponent<BulletController>().Init(target.transform.position, dir, attackDamage, unitGroup.PLAYER,level, playerUnitType);
+        if (target == null)
+            StopCoroutine(RangeAttackCorutine());
         else
-            arrow.GetComponent<BulletController>().Init(target.transform.position, dir, attackDamage, unitGroup.ENEMY);
-
-        //레인저의 레벨이 2 이상이고, 헌터일 경우
-        if(level > 1 && playerUnitType == playerUnitType.RANGE0)
         {
-            //레벨에 비례해 멀티샷 확률 조정
-            var ran = Random.Range(0, (5 - player.level));
-            if (ran == 0)
+            var dir = target.transform.position - firePos.transform.position;
+            var arrow = Instantiate(attackBullet, firePos.transform);
+            if (currentUnitGroup == unitGroup.PLAYER)
+                arrow.GetComponent<BulletController>().Init(target.transform.position, dir, attackDamage, unitGroup.PLAYER, level, playerUnitType);
+            else
+                arrow.GetComponent<BulletController>().Init(target.transform.position, dir, attackDamage, unitGroup.ENEMY);
+
+            //레인저의 레벨이 2 이상이고, 헌터일 경우
+            if (level > 1 && playerUnitType == playerUnitType.RANGE0)
             {
-                //멀티샷 발동시 약간의 지연시간 후에 한발 더 발사
-                StartCoroutine(MultiShotCorutine(0.2f));
+                //레벨에 비례해 멀티샷 확률 조정
+                var ran = Random.Range(0, (5 - player.level));
+                if (ran == 0)
+                {
+                    //멀티샷 발동시 약간의 지연시간 후에 한발 더 발사
+                    StartCoroutine(MultiShotCorutine(0.2f));
+                }
             }
         }
         yield return attacktime;
@@ -286,87 +305,95 @@ public class UnitManager : MonoBehaviour
         anime.SetTrigger("Attack");
         isAttack = true;
         yield return shottime;
-        var dir = target.transform.position - firePos.transform.position;
-        var arrow = Instantiate(attackBullet, firePos.transform);
-        //유닛 타입이 메이지1일때
-        if (playerUnitType == playerUnitType.MAGE1)
+
+        if(target != null)
         {
-            //공격 범위 내의 아군을 조사
-            var target = Physics2D.CircleCastAll(transform.position, attackRange, Vector2.zero,0f,LayerMask.GetMask("PlayerUnit"));
-            if (target.Length > 0)
+            var dir = target.transform.position - firePos.transform.position;
+            var arrow = Instantiate(attackBullet, firePos.transform);
+            //유닛 타입이 메이지1일때
+            if (playerUnitType == playerUnitType.MAGE1)
             {
-                for (int i = 0; i < target.Length; i++)
+                //공격 범위 내의 아군을 조사
+                var target = Physics2D.CircleCastAll(transform.position, attackRange, Vector2.zero, 0f, LayerMask.GetMask("PlayerUnit"));
+                if (target.Length > 0)
                 {
-                   var player =  target[i].transform.GetComponent<PlayerUnitManager>();
-                    float critical = 0;
-                    //레벨이 2 이상일 때
-                    if(level > 1)
+                    for (int i = 0; i < target.Length; i++)
                     {
-                        //힐량 증가
-                        critical = level * 3;
+                        var player = target[i].transform.GetComponent<PlayerUnitManager>();
+                        float critical = 0;
+                        //레벨이 2 이상일 때
+                        if (level > 1)
+                        {
+                            //힐량 증가
+                            critical = level * 3;
+                        }
+                        //아군의 체력 증가
+                        player.currentHP += attackDamage + critical;
+                        //아군 체력증가 이펙트 플레이
+                        player.healEffect.Play();
                     }
-                    //아군의 체력 증가
-                    player.currentHP += attackDamage + critical;
-                    //아군 체력증가 이펙트 플레이
-                    player.healEffect.Play();
                 }
             }
-        }
-        //유닛 타입이 메이지0일때
-        else if(playerUnitType == playerUnitType.MAGE0)
-        {
-            //공격 범위 내의 아군을 조사
-            var target = Physics2D.CircleCastAll(transform.position, attackRange, Vector2.zero, 0f, LayerMask.GetMask("PlayerUnit"));
-            if (target.Length > 0)
+            //유닛 타입이 메이지0일때
+            else if (playerUnitType == playerUnitType.MAGE0)
             {
-                for (int i = 0; i < target.Length; i++)
+                //공격 범위 내의 아군을 조사
+                var target = Physics2D.CircleCastAll(transform.position, attackRange, Vector2.zero, 0f, LayerMask.GetMask("PlayerUnit"));
+                if (target.Length > 0)
                 {
-                    var player = target[i].transform.GetComponent<PlayerUnitManager>();
-                    float bless = attackDamage;
-                    //아군의 공격력dmf 지정 시간만큼 업
-                    StartCoroutine(BlessCorutine(3f,player,attackDamage / 2f));
+                    for (int i = 0; i < target.Length; i++)
+                    {
+                        var player = target[i].transform.GetComponent<PlayerUnitManager>();
+                        float bless = attackDamage;
+                        //아군의 공격력dmf 지정 시간만큼 업
+                        StartCoroutine(BlessCorutine(2f, player, attackDamage / 2f));
+                    }
                 }
             }
-        }
-        //유닛 타입이 메이지 2일때
-        else if(playerUnitType == playerUnitType.MAGE2)
-        {
-            //레벨이 2이상일때
-            if (level > 1)
+            //유닛 타입이 메이지 2일때
+            else if (playerUnitType == playerUnitType.MAGE2)
             {
-                var ran = Random.Range(0, 4 - level);
-                if (ran == 0)
-                { 
-                    //투사체 추가
-                    var dir1 = target.transform.position - firePos.transform.position;
-                    var arrow1 = Instantiate(attackBullet, firePos.transform);
-                    dir1 = new Vector2(dir1.x, dir1.y + 0.5f);
-                    arrow1.GetComponent<BulletController>().Init(target.transform.position, dir1, attackDamage, unitGroup.PLAYER);
+                //레벨이 2이상일때
+                if (level > 1)
+                {
+                    var ran = Random.Range(0, 4 - level);
+                    if (ran == 0)
+                    {
+                        //투사체 추가
+                        var dir1 = target.transform.position - firePos.transform.position;
+                        var arrow1 = Instantiate(attackBullet, firePos.transform);
+                        dir1 = new Vector2(dir1.x, dir1.y + 1f);
+                        Debug.Log("1");
+                        arrow1.GetComponent<BulletController>().Init(target.transform.position, dir1, attackDamage, unitGroup.PLAYER);
+                    }
                 }
+
+
             }
+            arrow.GetComponent<BulletController>().Init(target.transform.position, dir, attackDamage, unitGroup.PLAYER);
 
-  
         }
-        arrow.GetComponent<BulletController>().Init(target.transform.position, dir, attackDamage, unitGroup.PLAYER);
-
-        
         yield return attacktime;
         isAttack =false;
     }
 
     IEnumerator BlessCorutine(float time, PlayerUnitManager unit, float damage)
     {
-        unit.attackDamage += damage;
-        //레벨이 2 이상인 경우
-        if(level > 1)
-            unit.attackSpeed -= 0.1f * level;
-        unit.blessEffect.Play();
-        yield return new WaitForSeconds(time);
-        unit.attackDamage -= damage;
-        if (level > 1)
-            unit.attackSpeed += 0.1f * level;
-        unit.blessEffect.Stop();
+        if (unit)
+        {
+            unit.attackDamage += damage;
+            //레벨이 2 이상인 경우
+            if (level > 1)
+                unit.attackSpeed -= 0.1f * level;
 
+            unit.blessEffect.Play();
+            yield return new WaitForSeconds(time);
+            unit.attackDamage -= damage;
+            if (level > 1)
+                unit.attackSpeed += 0.1f * level;
+            if(unit.blessEffect)
+            unit.blessEffect.Stop();
+        }
     }
 
     IEnumerator MultiShotCorutine(float time)
@@ -384,6 +411,8 @@ public class UnitManager : MonoBehaviour
     IEnumerator DieCorutine()
     {
         var dietime = new WaitForSeconds(dieSpeed);
+        Debug.Log("2");
+
         unitCollider.enabled = false;
         isDie = true;
         anime.SetBool("Run", false);
@@ -436,9 +465,14 @@ public class UnitManager : MonoBehaviour
         currentHP += value;
         if (currentHP <= 0)
         {
-            unitCollider.enabled = false;
             currentUnitState = unitState.DIE;
             DeleteOtherObject();
+            dustEffect.Stop();
+            isAttack = false;
+            isMove = false;
+            isJump = false;
+            Debug.Log("1");
+            StartCoroutine(DieCorutine());
         }
     }
 
@@ -449,7 +483,7 @@ public class UnitManager : MonoBehaviour
     protected void MoveToTarget(string layer)
     {
          target = GetTarget(layer);
-        if(target != null)
+        if(target != null && currentHP > 0)
         {
             Vector2 dir = target.transform.position - transform.position;
             var sprite = GetComponent<SpriteRenderer>();
@@ -460,10 +494,9 @@ public class UnitManager : MonoBehaviour
                 currentUnitState = unitState.MOVE;
 
             }
-            else if (currentHP > 0)
+            else
             {
                 currentUnitState = unitState.ATTACK;
-
             }
             #region Flip반전
             if (currentUnitGroup == unitGroup.PLAYER)

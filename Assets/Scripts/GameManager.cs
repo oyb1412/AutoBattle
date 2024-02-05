@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     public LevelManager levelManager;
     public ItemController itemController;
     public Vector2 mousePos;
+    public GameObject[] itemPrefabs;
+    public GameObject[] playerUnitPrefabs;
     private void Awake()
     {
         instance = this;

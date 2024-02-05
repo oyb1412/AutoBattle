@@ -32,7 +32,7 @@ public class MixUnitManager : MonoBehaviour
             for (int j = 1; j < LevelManager.maxLevel; j++)
             {
                 //레벨이 같은 유닛을 리스트로 저장
-                num = units.FindAll(x => x.level == 1);
+                num = units.FindAll(x => x.level == j);
                 if (num.Count > 2)
                     break;
             }
@@ -70,6 +70,7 @@ public class MixUnitManager : MonoBehaviour
         yield return new WaitForSeconds(time);
         UnitLevelUp(units);
         DestroyUnit(units);
+        //CheckUnitMix();
     }
 
     void DestroyUnit(List<PlayerUnitManager> unit)
@@ -84,6 +85,8 @@ public class MixUnitManager : MonoBehaviour
             if (unit[i].transform.position.x < GameManager.instance.playerUnitController.rimitPos[1])
                 BuySelectUnit.currentActiveUnitNum--;
 
+            //아이템 드랍
+            unit[i].ClearItem();
             //재료로 소모된 유닛 삭제
             unit[i].DeleteOtherObject();
             Destroy(unit[i].gameObject);
@@ -91,6 +94,9 @@ public class MixUnitManager : MonoBehaviour
     }
     void UnitLevelUp(List<PlayerUnitManager> unit)
     {
+        //아이템 드랍
+        unit[0].ClearItem();
         unit[0].UnitLevelUp();
+        unit[0].summonEffect.Play();
     }
 }
