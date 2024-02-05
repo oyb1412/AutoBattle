@@ -5,17 +5,10 @@ using UnityEngine.UI;
 using DG.Tweening;
 public class PlayerUnitManager : UnitManager
 {
-
-
     [HideInInspector]public int buyUnitIndex;
 
     //유닛의 레벨을 표시해주는 오브젝트 프리펩
     public GameObject levelStarPrefabs;
-
-    public float synageDamage;
-    public float synageAttackSpeed;
-    public float synageMoveSpeed;
-    public float synageHP; 
     
     public float itemDamage;
     public float itemAttackSpeed;
@@ -38,7 +31,7 @@ public class PlayerUnitManager : UnitManager
     protected bool isBless;
 
     //아이템을 표시할 이미지
-    [SerializeField] Image[] itemSlotImageObject;
+    public Image[] itemSlotImageObject;
 
     //아이템 스프라이트
     [SerializeField] Sprite[] itemImages;
@@ -51,14 +44,14 @@ public class PlayerUnitManager : UnitManager
 
     //착용하고있는 아이템의 종류
     public int[] itemNum;
+
+    [SerializeField]Sprite[] saveItemImage;
     protected override void Awake()
     {
         base.Awake();
         saveLevelStar = Instantiate(levelStarPrefabs, GameObject.Find("OverrayCanvas").transform);
-        level = 1;
  
         levelStar = new Image[3];
-        isItem = new bool[itemImages.Length];
         levelStar = saveLevelStar.GetComponentsInChildren<Image>();
         saveLevelStar.transform.position = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x, transform.position.y - 0.4f, transform.position.z));
         for (int i = 1; i < levelStar.Length; i++)
@@ -70,10 +63,22 @@ public class PlayerUnitManager : UnitManager
         itemSlotImageObject[1] = saveSlider.GetComponentsInChildren<Image>()[6];
         itemSlotImageObject[2] = saveSlider.GetComponentsInChildren<Image>()[8];
 
-        itemNum = new int[itemSlotImageObject.Length];
-        for (int i = 0; i < itemNum.Length; i++)
+        for(int i = 0;i<saveItemImage.Length;i++)
         {
-            itemNum[i] = 10;
+            if (saveItemImage[i] != null)
+            {
+                itemSlotImageObject[i].sprite = saveItemImage[i];
+                itemSlotImageObject[i].color = Color.white;
+            }
+        }
+
+        if (level == 2)
+            levelStar[1].gameObject.SetActive(true);
+        else if (level == 3)
+        {
+            levelStar[0].gameObject.SetActive(false);
+            levelStar[1].gameObject.SetActive(false);
+            levelStar[2].gameObject.SetActive(true);
         }
     }
     private void Start()
@@ -84,6 +89,7 @@ public class PlayerUnitManager : UnitManager
         itemHP = saveMaxHp * 0.3f;
     }
 
+   
     /// <summary>
     /// 일정 주기마다 자신의 공격 데미지 / 5의 데미지를 주변 1.5범위에 입힘
     /// </summary>
@@ -166,6 +172,8 @@ public class PlayerUnitManager : UnitManager
         currentHP = hp;
     }
 
+
+
     /// <summary>
     /// 아이템 착용 
     /// </summary>
@@ -176,6 +184,7 @@ public class PlayerUnitManager : UnitManager
         if(itemSlotImageObject[0].sprite == null)
         {
             itemSlotImageObject[0].sprite = itemImages[itemNum];
+            saveItemImage[0] = itemImages[itemNum];
             itemSlotImageObject[0].color = Color.white;
             this.itemNum[0] = itemNum;
             isItem[itemNum] = true;
@@ -222,6 +231,8 @@ public class PlayerUnitManager : UnitManager
         else if(itemSlotImageObject[1].sprite == null)
         {
             itemSlotImageObject[1].sprite = itemImages[itemNum];
+            saveItemImage[1] = itemImages[itemNum];
+
             itemSlotImageObject[1].color = Color.white;
             this.itemNum[1] = itemNum;
             isItem[itemNum] = true;
@@ -267,6 +278,8 @@ public class PlayerUnitManager : UnitManager
         else if(itemSlotImageObject[2].sprite == null)
         {
             itemSlotImageObject[2].sprite = itemImages[itemNum];
+            saveItemImage[2] = itemImages[itemNum];
+
             itemSlotImageObject[2].color = Color.white;
             this.itemNum[2] = itemNum;
             isItem[itemNum] = true;

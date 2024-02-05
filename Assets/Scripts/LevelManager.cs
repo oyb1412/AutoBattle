@@ -64,24 +64,20 @@ public class LevelManager : MonoBehaviour
     //소환용 포지션
     Vector2[,] summonPos;
 
-    //전투 시작전 유닛 저장용
-    struct PlayerUnits
-    {
-        public float maxHp;
-        public Vector2 pos;
-    }
-
-    //전투 시작전 유닛 저장용
-    [SerializeField]PlayerUnits[] playerUnits;
-
-    [SerializeField] PlayerUnitManager[] players;
-
     //아이템 선택 판넬
     [SerializeField] GameObject selectPanel;
 
     //각각 아이템 판넬
     [SerializeField] GameObject[] itemPanel;
 
+    //플레이어 저장
+    [SerializeField] GameObject[] savePlayer;
+
+    //에러 메시지 판넬
+    public GameObject errorMessagePanel;
+
+    //에러 메시지 텍스트
+    public Text errorMessageText;
     void Start()
     {
         currentState = StateType.NONBATTLE;
@@ -254,19 +250,13 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     void SavePlayerUnit()
     {
-        var obj = GameObject.FindGameObjectsWithTag(playerTag);
-        //playerUnits = new PlayerUnits[obj.Length];
-        //for (int i = 0; i < obj.Length; i++)
-        //{
-        //    //unit구조체에 기본 정보
-        //    playerUnits[i].pos = obj[i].transform.position;
-        //    playerUnits[i].maxHp = obj[i].GetComponent<PlayerUnitManager>().maxHP;
-        //}
-        players = new PlayerUnitManager[obj.Length];
-        for (int i = 0; i < obj.Length; i++)
+        var obj = GameObject.FindGameObjectsWithTag("Player");
+        savePlayer = new GameObject[obj.Length];
+        for(int i = 0;i<obj.Length;i++)
         {
-            //unit구조체에 기본 정보
-            players[i] = obj[i].GetComponent<PlayerUnitManager>();
+            savePlayer[i] = Instantiate(obj[i], null);
+            savePlayer[i].GetComponent<PlayerUnitManager>().SetOtherObject(false);
+            savePlayer[i].SetActive(false);
         }
     }
 
@@ -275,20 +265,17 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     void SetPlayerUnit()
     {
-        //var obj = GameObject.FindGameObjectsWithTag(playerTag);
-        //for(int i = 0;i < obj.Length; i++)
-        //{
-        //    obj[i].GetComponent<PlayerUnitManager>().ResetObject(playerUnits[i].pos, playerUnits[i].maxHp);
-        //    obj[i].GetComponent<PlayerUnitManager>().summonEffect.Play();
-        //    obj[i].GetComponent<PlayerUnitManager>().currentUnitState = unitState.JUMP;
-        //}
-        for(int i = 0;i<players.Length;i++)
+        var obj = GameObject.FindGameObjectsWithTag("Player");
+        for (int i = 0; i < obj.Length; i++)
         {
-            Instantiate(GameManager.instance.playerUnitPrefabs[(int)players[i].playerUnitType], players[i].transform.position, Quaternion.identity);
+            obj[i].GetComponent<PlayerUnitManager>().DeleteOtherObject();
+            Destroy(obj[i]);
         }
-        for (int i = 0; i < players.Length; i++)
+        for (int i = 0; i< savePlayer.Length;i++)
         {
-            Destroy(players[i].gameObject);
+            savePlayer[i].SetActive(true);
+            savePlayer[i].GetComponent<PlayerUnitManager>().SetOtherObject(true);
+
         }
     }
     /// <summary>
@@ -300,6 +287,7 @@ public class LevelManager : MonoBehaviour
         if(GameManager.instance.playerUnitController.currentActiveUnitNum == 0)
         {
             //배치된 유닛이 없으면 전투 시작 불가 경고
+            SetErrorMessage("배치된 유닛이 존재하지 않아 전투를 시작할 수 없습니다!");
         }
         else if (currentState == StateType.NONBATTLE)
         {
@@ -311,5 +299,21 @@ public class LevelManager : MonoBehaviour
     {
         currentGold += value;
         currentGoldText.text = currentGold + " 골드";
+    }
+
+
+    /// <summary>
+    /// 에러메시지 팝업 + 카메라 쉐이크
+    /// </summary>
+    /// <param name="text"></param>
+    public void SetErrorMessage(string text)
+    {
+        errorMessagePanel.SetActive(true);
+        errorMessageText.color = Color.white;
+        errorMessageText.transform.parent.GetComponent<Image>().color = Color.white;
+        errorMessageText.text = text;
+        Camera.main.transform.DOShakePosition(1f,0.1f);
+        errorMessageText.DOColor(new Color(1f, 1f, 1f, 0f), 1.5f);
+        errorMessageText.transform.parent.GetComponent<Image>().DOColor(new Color(1f, 1f, 1f, 0f), 1.5f);
     }
 }

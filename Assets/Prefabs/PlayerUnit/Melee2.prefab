@@ -208,10 +208,6 @@ MonoBehaviour:
   isStun: 0
   buyUnitIndex: 0
   levelStarPrefabs: {fileID: 1871510041965232950, guid: cb2f5fee211830b45917a823c05ef1a9, type: 3}
-  synageDamage: 0
-  synageAttackSpeed: 0
-  synageMoveSpeed: 0
-  synageHP: 0
   itemDamage: 0
   itemAttackSpeed: 0
   itemMoveSpeed: 0
@@ -229,9 +225,13 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 13283fb823177004ca012ed430706e85, type: 2}
   - {fileID: 21300000, guid: ddcd28a16d6d6a242a636025cb0ee41b, type: 2}
   - {fileID: 21300000, guid: d39f10c3640faa34c8155ef25396cbfe, type: 2}
-  isItem: 
+  isItem: 00000000000000
   isFireRing: 0
-  itemNum: 
+  itemNum: 000000000000000000000000
+  saveItemImage:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!212 &4952686670198099874
 SpriteRenderer:
   m_ObjectHideFlags: 0

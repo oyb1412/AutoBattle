@@ -411,7 +411,6 @@ public class UnitManager : MonoBehaviour
     IEnumerator DieCorutine()
     {
         var dietime = new WaitForSeconds(dieSpeed);
-        Debug.Log("2");
 
         unitCollider.enabled = false;
         isDie = true;
@@ -471,7 +470,6 @@ public class UnitManager : MonoBehaviour
             isAttack = false;
             isMove = false;
             isJump = false;
-            Debug.Log("1");
             StartCoroutine(DieCorutine());
         }
     }
@@ -567,5 +565,11 @@ public class UnitManager : MonoBehaviour
             Destroy(saveSlider.gameObject);
     }
 
-
+    public void SetOtherObject(bool trigger)
+    {
+        if (saveLevelStar)
+            saveLevelStar.gameObject.SetActive(trigger);
+        if (saveSlider)
+            saveSlider.gameObject.SetActive(trigger);
+    }
 }
