@@ -73,6 +73,7 @@ public class BuySelectUnit : MonoBehaviour
             GameManager.instance.levelManager.SetGold(-LevelManager.buyCost);
             GameManager.instance.showRandomUnit.ShowRandomUnitImage();
             GameManager.instance.mixUnitManager.CheckUnitMix();
+            GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.GOLD);
 
         }
         else

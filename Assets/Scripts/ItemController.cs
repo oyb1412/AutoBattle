@@ -52,6 +52,8 @@ public class ItemController : MonoBehaviour
                     //터치 직전의 위치를 저장
                     savePosition = target.transform.position;
                     isTouch = true;
+                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SELECT);
+
                     touchDelay = 0;
                 }
             }
@@ -68,8 +70,9 @@ public class ItemController : MonoBehaviour
                 if(GameManager.instance.MouseRayCast("PlayerUnit") != null)
                 {
                     var player = GameManager.instance.MouseRayCast("PlayerUnit").GetComponent<PlayerUnitManager>();
+                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SELECT);
 
-                    if(player.SetItem((int)target.itemType))
+                    if (player.SetItem((int)target.itemType))
                         Destroy(target.gameObject);
                 }
                 isTouch = false;
@@ -83,6 +86,7 @@ public class ItemController : MonoBehaviour
                 if (GameManager.instance.MouseRayCast("PlayerUnit") != null)
                 {
                     var player = GameManager.instance.MouseRayCast("PlayerUnit").GetComponent<PlayerUnitManager>();
+                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SELECT);
 
                     if (player.SetItem((int)target.itemType))
                         Destroy(target.gameObject);
@@ -97,6 +101,7 @@ public class ItemController : MonoBehaviour
                     isTouch = false;
                     //저장해둔 원래 위치로 이동
                     target.transform.position = savePosition;
+                    GameManager.instance.levelManager.SetErrorMessage("전장 밖에 아이템을 놓을 수 없습니다!");
                 }
 
             }

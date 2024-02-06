@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public ShowRandomUnit showRandomUnit;
     public LevelManager levelManager;
     public ItemController itemController;
+    public AudioManager audioManager;
     public Vector2 mousePos;
     public GameObject[] itemPrefabs;
 

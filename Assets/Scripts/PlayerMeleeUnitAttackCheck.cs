@@ -44,6 +44,8 @@ public class PlayerMeleeUnitAttackCheck : MonoBehaviour
             }
 
             target.SetHP(-(player.attackDamage + critical));
+            GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.MELEE);
+
             count--;
 
 

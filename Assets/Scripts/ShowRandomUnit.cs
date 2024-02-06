@@ -60,6 +60,8 @@ public class ShowRandomUnit : MonoBehaviour
             unitImages[random[i]].SetActive(true);
         }
         GameManager.instance.levelManager.SetGold(-LevelManager.reRullCost);
+        GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.GOLD);
+
     }
 
     /// <summary>

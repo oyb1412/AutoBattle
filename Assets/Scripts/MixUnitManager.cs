@@ -107,5 +107,7 @@ public class MixUnitManager : MonoBehaviour
         unit[0].ClearItem();
         unit[0].UnitLevelUp();
         unit[0].summonEffect.Play();
+        GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.LEVELUP);
+
     }
 }

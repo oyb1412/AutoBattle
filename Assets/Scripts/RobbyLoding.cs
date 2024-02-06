@@ -6,11 +6,13 @@ public class RobbyLoding : MonoBehaviour
     [SerializeField] Slider lodingSlider;
     [SerializeField] Text lodingText;
     [SerializeField] GameObject startPanel;
+    [SerializeField] AudioManager audioManager;
     float maxLodingTime;
     float currentLodingTime;
 
     private void Start()
     {
+        audioManager.PlayerBgm(0, true);
         maxLodingTime = 100f;
     }
     private void Update()

@@ -89,6 +89,8 @@ public class PlayerUnitController : MonoBehaviour
                     else
                         savePosition = new Vector2(10f, 5f);
                     isTouch = true;
+                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SELECT);
+
                     touchDelay = 0;
                 }
             }
@@ -111,9 +113,13 @@ public class PlayerUnitController : MonoBehaviour
                     }
                     //전장에서 이동시킨 경우
                     else
-                        isTouch = false;
+                {
+                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SELECT);
+                    isTouch = false;
 
                 }
+
+            }
                 //유닛을 전장 내에 놓았고, 현재 배치수가 최대 배치수보다 적을 경우
                 if (target.transform.position.x < rimitPos[0] && target.transform.position.x > rimitPos[1] &&
                     target.transform.position.y > rimitPos[2] && target.transform.position.y < rimitPos[3] &&
@@ -139,11 +145,13 @@ public class PlayerUnitController : MonoBehaviour
  
                     touchDelay = 0;
                     isTouch = false;
-                }
+                     GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SELECT);
+
+            }
 
 
-                //현재 마우스의 위치가 쓰레기통일 경우
-                if (GameManager.instance.MouseRayCast(LevelManager.SellBinTagNLayer, LevelManager.SellBinTagNLayer) != null)
+            //현재 마우스의 위치가 쓰레기통일 경우
+            if (GameManager.instance.MouseRayCast(LevelManager.SellBinTagNLayer, LevelManager.SellBinTagNLayer) != null)
                 {
                     touchDelay = 0;
                     isTouch = false;
@@ -153,9 +161,10 @@ public class PlayerUnitController : MonoBehaviour
                     BuySelectUnit.currentActiveUnitNum--;
                     //유닛 판매가만큼 골드를 얻는다
                     GameManager.instance.levelManager.SetGold(LevelManager.sellCost);
+                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.GOLD);
 
-                    //유닛이 아이템을 가진 상태면 아이템 드랍
-                    target.ClearItem();
+                //유닛이 아이템을 가진 상태면 아이템 드랍
+                target.ClearItem();
                     //유닛이 지닌 모든 오브젝트 삭제
                     target.DeleteOtherObject();
                     //유닛을 삭제한다
@@ -203,7 +212,9 @@ public class PlayerUnitController : MonoBehaviour
                                         target.transform.position = GameManager.instance.buySelectUnit.summonPos[0];
                                         target.savePos = target.transform.position;
                                          touchDelay = 0;
-                                         isTouch = false;
+                                     GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SELECT);
+
+                                isTouch = false;
                                     }
                                     break;                            
                                 case LevelManager.SpawnColliderTag1:
@@ -221,7 +232,8 @@ public class PlayerUnitController : MonoBehaviour
                                                 currentActiveUnitNum--;
                                                 //숫자를 조정했으니 텍스트도 변경해준다
                                                 activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
-                                            SynageSet(-1, target);
+
+                                        SynageSet(-1, target);
                                         }
                                     }
                                         target.buyUnitIndex = 1;
@@ -230,8 +242,10 @@ public class PlayerUnitController : MonoBehaviour
                                         target.savePos = target.transform.position;
                                          touchDelay = 0;
                                          isTouch = false;
-                                    }
-                                    break;                             
+                                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SELECT);
+
+                            }
+                            break;                             
                                 case LevelManager.SpawnColliderTag2:
                                     if(BuySelectUnit.summonIndex[2] == false)
                                     {
@@ -259,8 +273,10 @@ public class PlayerUnitController : MonoBehaviour
                                         target.savePos = target.transform.position;
                                         touchDelay = 0;
                                         isTouch = false;
-                                    }
-                                    break;                              
+                                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SELECT);
+
+                            }
+                            break;                              
                                 case LevelManager.SpawnColliderTag3:
                                     if(BuySelectUnit.summonIndex[3] == false)
                                     {
@@ -285,8 +301,10 @@ public class PlayerUnitController : MonoBehaviour
                                         target.savePos = target.transform.position;
                                         touchDelay = 0;
                                         isTouch = false;
-                                    }
-                                    break;                            
+                                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SELECT);
+
+                            }
+                            break;                            
                                 case LevelManager.SpawnColliderTag4:
                                     if(BuySelectUnit.summonIndex[4] == false)
                                     {
@@ -314,8 +332,10 @@ public class PlayerUnitController : MonoBehaviour
                                         target.savePos = target.transform.position;
                                         touchDelay = 0;
                                         isTouch = false;
-                                    }
-                                    break;
+                                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SELECT);
+
+                            }
+                            break;
                             }
 
 

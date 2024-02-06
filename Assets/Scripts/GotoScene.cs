@@ -8,6 +8,7 @@ using System;
 public class GotoScene : MonoBehaviour
 {
     [SerializeField] Image fadeImage;
+    public AudioManager audioManager;
     float fadeAlpha;
     private void Awake()
     {
@@ -22,6 +23,12 @@ public class GotoScene : MonoBehaviour
     public void GoToScene(int index)
     {
         StartCoroutine(FadeOnCorutine(index));
+        audioManager.PlayerSfx(AudioManager.Sfx.SELECT);
+        audioManager.PlayerBgm(0, false);
+        audioManager.PlayerBgm(1, false);
+        audioManager.PlayerBgm(2, false);
+
+
     }
 
     IEnumerator FadeOnCorutine(int index)

@@ -91,6 +91,8 @@ public class LevelManager : MonoBehaviour
 
     void Start()
     {
+        GameManager.instance.audioManager.PlayerBgm(1, true);
+
         currentState = StateType.NONBATTLE;
         doNextStageBtn.SetActive(true);
         currentRound = 1;
@@ -128,6 +130,8 @@ public class LevelManager : MonoBehaviour
                 //전투 패배
                 if (target[0].GetComponent<PlayerUnitManager>() != null)
                 {
+                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.HIT);
+
                     StartCoroutine(RoundLoseCorutine(3f));
                 }
                 //전투 승리
@@ -195,6 +199,8 @@ public class LevelManager : MonoBehaviour
                 currentState = StateType.GAMEOVER;
                 StartCoroutine(HitEffectCorutine(0));
                 StopAllCoroutines();
+                GameManager.instance.audioManager.PlayerBgm(1, false);
+
                 scene.GoToScene(2);
                 break;
             case 200:
@@ -229,6 +235,7 @@ public class LevelManager : MonoBehaviour
             itemPanel[i].gameObject.SetActive(false);
         }
         selectFadePanel.gameObject.SetActive(false);
+        GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SELECT);
 
         currentState = StateType.NONBATTLE;
         mainPanel.GetComponent<RectTransform>().DOAnchorPosY(-430f, 3f);
@@ -290,6 +297,8 @@ public class LevelManager : MonoBehaviour
     /// <param name="round"></param>
     void SummonEnemyUnit(int round)
     {
+        GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SUMMON);
+
         switch (round)
         {
             case 1:
@@ -419,6 +428,8 @@ public class LevelManager : MonoBehaviour
             savePlayer[i].SetActive(true);
             savePlayer[i].GetComponent<PlayerUnitManager>().SetStarObject(true);
         }
+        GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SUMMON);
+
     }
 
     /// <summary>
@@ -449,10 +460,13 @@ public class LevelManager : MonoBehaviour
         {
             //배치된 유닛이 없으면 전투 시작 불가 경고
             SetErrorMessage("배치된 유닛이 존재하지 않아 전투를 시작할 수 없습니다!");
+
         }
         else if (currentState == StateType.NONBATTLE)
         {
             StartCoroutine(GoBattleStateCorutine(3f));
+            GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.BATTLEON);
+
         }
     }
 
@@ -476,5 +490,7 @@ public class LevelManager : MonoBehaviour
         Camera.main.transform.DOShakePosition(1f,0.1f);
         errorMessageText.DOColor(new Color(1f, 1f, 1f, 0f), 1.5f);
         errorMessageText.transform.parent.GetComponent<Image>().DOColor(new Color(1f, 1f, 1f, 0f), 1.5f);
+        GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.ERROR);
+
     }
 }

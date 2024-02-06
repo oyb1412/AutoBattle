@@ -30,6 +30,8 @@ public class EnemyMeleeUnitAttackCheck : MonoBehaviour
                 //반사 데미지는 유닛 데미지의 1% * 시너지 수치(8,16,24)
                 var damage = enemy.attackDamage * 0.01f * meleeSynage;
                 enemy.SetHP(damage);
+                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.MELEE);
+
             }
         }
     }

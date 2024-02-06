@@ -66,6 +66,8 @@ MonoBehaviour:
         - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-2057613014-0
         - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1456665748-0
         - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-421413944-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1402386842-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1507556360-0
         values:
         - colorIndex: 6
           iconNameOrGuid: LightmapParameters Icon
@@ -161,6 +163,10 @@ MonoBehaviour:
           iconNameOrGuid: LightmapParameters Icon
         - colorIndex: 1
           iconNameOrGuid: 
+        - colorIndex: 1
+          iconNameOrGuid: 
+        - colorIndex: 5
+          iconNameOrGuid: AudioSource Icon
     - goDatas_byGlobalId:
         keys:
         - globalObjectIdString: GlobalObjectId_V1-2-6aaa301252a6e784eb804c724845fc3f-1494317932-0

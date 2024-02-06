@@ -176,17 +176,6 @@ public class UnitManager : MonoBehaviour
                     isJump = false;
                 }
                 break;
-            //case unitState.DIE:
-            //    if (!isDie)
-            //    {
-            //        dustEffect.Stop();
-            //        isAttack = false;
-            //        isMove = false;
-            //        isJump = false;
-            //        Debug.Log("1");
-            //        StartCoroutine(DieCorutine());
-            //    }
-            //    break;
             case unitState.ATTACK:
                 if(!isAttack && target != null)
                 {
@@ -233,8 +222,9 @@ public class UnitManager : MonoBehaviour
         anime.SetTrigger("Attack");
         isAttack = true;
         yield return shottime;
+        GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.RANGE);
 
-        if(target != null)
+        if (target != null)
         {
             var dir = target.transform.position - firePos.transform.position;
             var arrow = Instantiate(attackBullet, firePos.transform);
@@ -276,7 +266,7 @@ public class UnitManager : MonoBehaviour
         isAttack = true;
         yield return shottime;
 
-        if(target != null)
+        if (target != null)
         {
             var dir = target.transform.position - firePos.transform.position;
             var arrow = Instantiate(attackBullet, firePos.transform);
@@ -303,6 +293,8 @@ public class UnitManager : MonoBehaviour
                         player.healEffect.Play();
                     }
                 }
+                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.HEAL);
+
             }
             //유닛 타입이 메이지0일때
             else if (playerUnitType == playerUnitType.MAGE0)
@@ -319,10 +311,14 @@ public class UnitManager : MonoBehaviour
                         StartCoroutine(BlessCorutine(attackSpeed, player, attackDamage / 2f));
                     }
                 }
+                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.BUFF);
+
             }
             //유닛 타입이 메이지 2일때
             else if (playerUnitType == playerUnitType.MAGE2)
             {
+                GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.MAGE);
+
                 //레벨이 2이상일때
                 if (level > 1)
                 {
