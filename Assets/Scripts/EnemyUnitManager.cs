@@ -11,7 +11,19 @@ public class EnemyUnitManager : UnitManager
     //Ω∫≈œ ¿Ã∆Â∆Æ
     public ParticleSystem stunEffect;
 
-
+    private void Start()
+    {
+        SetStatus(GameManager.instance.levelManager.currentRound);
+    }
+    public void SetStatus(int round)
+    {
+        attackDamage += round * 2;
+        moveSpeed += 0.1f * round;
+        attackSpeed -= 0.02f * round;
+        maxHP += round * 15;
+        currentHP = maxHP;
+        transform.localScale = new Vector2(1f+(round * 0.05f), 1f + (round * 0.05f));
+    }
 
     override protected void Update()
     {

@@ -41,7 +41,7 @@ public class MixUnitManager : MonoBehaviour
                 for (int i = 0; i <= (int)playerUnitType.MAGE2; i++)
                 {
                     //레벨이 같은 유닛 중에서 타입이 같은 유닛을 리스트로 저장
-                    typeEndNum = num.FindAll(x => x.playerUnitType == (playerUnitType)i).ToList();
+                    typeEndNum = num.FindAll(x => x.playerUnitType == (playerUnitType)i);
                     if (typeEndNum.Count > 2)
                         break;
                 }
@@ -51,11 +51,10 @@ public class MixUnitManager : MonoBehaviour
                     //레벨,종류가 같은 유닛이 3체 이상 있을 시
                     if (typeEndNum.Count >= LevelManager.mixNum)
                     {
-                        StartCoroutine(MixedUnitCorutine(typeEndNum, 1f));
+                        StartCoroutine(MixedUnitCorutine(typeEndNum, 0.2f));
                     }
                 }
             }
-
         }
     }
 
@@ -70,7 +69,8 @@ public class MixUnitManager : MonoBehaviour
         yield return new WaitForSeconds(time);
         UnitLevelUp(units);
         DestroyUnit(units);
-        //CheckUnitMix();
+        yield return new WaitForSeconds(time * 1.1f);
+        CheckUnitMix();
     }
 
     void DestroyUnit(List<PlayerUnitManager> unit)
@@ -82,8 +82,17 @@ public class MixUnitManager : MonoBehaviour
                 BuySelectUnit.summonIndex[unit[i].buyUnitIndex] = false;
 
             //유닛이 보관함에 있었다면, 현재 보관함의 수용 숫자 감소
-            if (unit[i].transform.position.x < GameManager.instance.playerUnitController.rimitPos[1])
+            if (unit[i].savePos.x < GameManager.instance.playerUnitController.rimitPos[1])
                 BuySelectUnit.currentActiveUnitNum--;
+            //유닛이 전장에 있었다면, 전장 배치 수 감소 및 시너지 조정
+            else
+            {
+                GameManager.instance.playerUnitController.SynageSet(-1, unit[i]);
+                GameManager.instance.playerUnitController.currentActiveUnitNum--;
+                GameManager.instance.playerUnitController.activeUnitNumText.text = string.Format("{0} / {1}", GameManager.instance.playerUnitController.currentActiveUnitNum, PlayerUnitController.maxActiveUnitNum);
+
+            }
+
 
             //아이템 드랍
             unit[i].ClearItem();

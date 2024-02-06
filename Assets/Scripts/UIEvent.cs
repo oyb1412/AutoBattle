@@ -49,7 +49,7 @@ public class UIEvent : MonoBehaviour
                     break;             
                 case "Unit2BG":
                     synagePanel.SetActive(true);
-                    info.text = "가장 먼 적을 기습하는 암살자입니다. 레벨 상승 시 일정 확률로 치명타 피해를 입힙니다.";
+                    info.text = "빠른 속도로 적을 기습하는 암살자입니다. 레벨 상승 시 일정 확률로 치명타 피해를 입힙니다.";
                     break;             
                 case "Unit3BG":
                     synagePanel.SetActive(true);
@@ -61,11 +61,11 @@ public class UIEvent : MonoBehaviour
                     break;             
                 case "Unit5BG":
                     synagePanel.SetActive(true);
-                    info.text = "가장 먼 적을 공격하는 저격수입니다. 레벨 상승 시 일정 확률로 적을 즉사시킵니다.";
+                    info.text = "느리지만 긴 사거리와 강력한 공격력을 지닌 저격수입니다. 레벨 상승 시 일정 확률로 적을 즉사시킵니다.";
                     break;            
                 case "Unit6BG":
                     synagePanel.SetActive(true);
-                    info.text = "아군의 능력치를 강화시키는 버퍼입니다. 레벨 상승 시 아군의 공격 속도도 증가시킵니다.";
+                    info.text = "아군의 공격력을 강화시키는 버퍼입니다. 레벨 상승 시 아군의 공격 속도도 증가시킵니다.";
                     break;            
                 case "Unit7BG":
                     synagePanel.SetActive(true);

@@ -26,9 +26,14 @@ public class ShowRandomUnit : MonoBehaviour
     public void RerollUnitImage()
     {
         //현재 터치중이거나, 전투 상태거나, 현재 골드가 리룰 비용보다 적으면 리턴
-        if (GameManager.instance.playerUnitController.isTouch || GameManager.instance.levelManager.currentState == StateType.BATTLE ||
-            GameManager.instance.levelManager.currentGold < LevelManager.reRullCost)
+        if (GameManager.instance.playerUnitController.isTouch || GameManager.instance.levelManager.currentState == StateType.BATTLE)
             return;
+
+        if(GameManager.instance.levelManager.currentGold < LevelManager.reRullCost)
+        {
+            GameManager.instance.levelManager.SetErrorMessage("보유 골드가 부족해 리롤을 할 수 없습니다!");
+            return;
+        }
 
         int[] random = new int[showMaxUnit];
         for (int i = 0; i < unitImages.Length; i++)

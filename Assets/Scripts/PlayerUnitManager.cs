@@ -15,6 +15,9 @@ public class PlayerUnitManager : UnitManager
     public float itemMoveSpeed;
     public float itemHP;
 
+    //유닛을 내려놓은 포지션
+    public Vector2 savePos;
+
     //각 별을 표시하는 이미지 오브젝트
     [SerializeField]Image[] levelStar;
 
@@ -49,7 +52,7 @@ public class PlayerUnitManager : UnitManager
     protected override void Awake()
     {
         base.Awake();
-        saveLevelStar = Instantiate(levelStarPrefabs, GameObject.Find("OverrayCanvas").transform);
+        saveLevelStar = Instantiate(levelStarPrefabs, GameObject.Find("OtherCanvas").transform);
  
         levelStar = new Image[3];
         levelStar = saveLevelStar.GetComponentsInChildren<Image>();
@@ -83,8 +86,8 @@ public class PlayerUnitManager : UnitManager
     }
     private void Start()
     {
-        itemDamage = saveAttackDamage * 0.3f;
-        itemAttackSpeed = saveAttackSpeed * 0.3f;
+        itemDamage = saveAttackDamage * 0.15f;
+        itemAttackSpeed = saveAttackSpeed * 0.15f;
         itemMoveSpeed = saveMoveSpeed * 0.3f;
         itemHP = saveMaxHp * 0.3f;
     }
@@ -138,16 +141,19 @@ public class PlayerUnitManager : UnitManager
     public void UnitLevelUp()
     {
         level++;
-        moveSpeed *= 1.3f;
-        saveMoveSpeed *= 1.3f;
+        moveSpeed *= 1.5f;
+        saveMoveSpeed *= 1.5f;
         attackSpeed *= 0.8f;
         saveAttackSpeed *= 0.8f;
-        attackDamage *= 1.3f;
-        saveAttackDamage *= 1.3f;
+        attackDamage *= 1.5f;
+        saveAttackDamage *= 1.5f;
         attackRange *= 1.3f;
         saveAttackRange *= 1.3f;
         transform.localScale *= 1.1f;
-        if(level == 2)
+        maxHP *= 1.5f;
+        currentHP = maxHP;
+
+        if (level == 2)
             levelStar[1].gameObject.SetActive(true);
         else if(level == 3)
         {
@@ -325,7 +331,7 @@ public class PlayerUnitManager : UnitManager
         else
         {
             //모든 아이템 슬롯이 꽉찼으므로 아이템을 먹을 수 없음
-            Debug.Log("슬롯꽉참");
+            GameManager.instance.levelManager.SetErrorMessage("이 캐릭터는 더이상 아이템을 장착할 수 없습니다!");
             return false;
         }
     }
@@ -389,7 +395,7 @@ public class PlayerUnitManager : UnitManager
                 }
 
                 //초기화된 스탯을 기반으로 시너지를 재조정
-                GameManager.instance.playerUnitController.SynageSet(0);
+                GameManager.instance.playerUnitController.SynageSet(0,this);
                 //실제 유닛의 아이템 해제
                 itemSlotImageObject[i].sprite = null;
                 itemSlotImageObject[i].color = new Color(1f, 1f, 1f, 0f);

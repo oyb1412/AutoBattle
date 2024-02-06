@@ -125,14 +125,15 @@ MonoBehaviour:
   moveSpeed: 2
   attackSpeed: 1
   saveAttackSpeed: 0
-  attackDamage: 5
+  attackDamage: 7
   saveAttackDamage: 0
-  attackRange: 3
+  attackRange: 4
   saveAttackRange: 0
   saveMaxHp: 0
   saveMoveSpeed: 0
   count: 1
   level: 1
+  saveSlider: {fileID: 0}
   attackBullet: {fileID: 5577993692671768689, guid: 17677818ac5e2374c8d4839ddf418161, type: 3}
   firePos: {fileID: 6891769430102454022}
   attackCollider: {fileID: 0}

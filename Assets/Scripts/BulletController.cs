@@ -51,9 +51,8 @@ public class BulletController : MonoBehaviour
     {
         if (unitGroup == unitGroup.PLAYER)
         {
-            if (collision.CompareTag("Enemy") && count > 0)
+            if (collision.CompareTag("Enemy"))
             {
-                count--;
                 float critical = 0;
                 //발사한 유닛이 스나이퍼고 레벨이 2 이상일 때
                 if (unitType == playerUnitType.RANGE2 && level > 1)
@@ -96,7 +95,7 @@ public class BulletController : MonoBehaviour
                 var effect = Instantiate(attackEffect, null);
                 effect.transform.position = transform.position;
                 effect.Play();
-                Destroy(effect, 0.5f);
+                Destroy(effect.gameObject, 0.5f);
                 Destroy(gameObject);
             }
         }

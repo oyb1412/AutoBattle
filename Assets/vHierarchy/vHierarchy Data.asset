@@ -15,6 +15,7 @@ MonoBehaviour:
   sceneDatas_byGuid:
     keys:
     - 2cda990e2423bbf4892e6590ba056729
+    - 6aaa301252a6e784eb804c724845fc3f
     values:
     - goDatas_byGlobalId:
         keys:
@@ -58,6 +59,13 @@ MonoBehaviour:
         - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1449941638-0
         - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-4805661493651616219-1154108646
         - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-5937640279137534198-1381204355
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-7812004935642488807-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-4805661494646340925-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-5937640277766881653-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-7147244835389279229-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-2057613014-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-1456665748-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2cda990e2423bbf4892e6590ba056729-421413944-0
         values:
         - colorIndex: 6
           iconNameOrGuid: LightmapParameters Icon
@@ -137,5 +145,34 @@ MonoBehaviour:
           iconNameOrGuid: 
         - colorIndex: 1
           iconNameOrGuid: 
+        - colorIndex: 1
+          iconNameOrGuid: 
+        - colorIndex: 1
+          iconNameOrGuid: 
+        - colorIndex: 1
+          iconNameOrGuid: 
+        - colorIndex: 6
+          iconNameOrGuid: 
+        - colorIndex: 1
+          iconNameOrGuid: 
+        - colorIndex: 1
+          iconNameOrGuid: LightmapParameters Icon
+        - colorIndex: 1
+          iconNameOrGuid: LightmapParameters Icon
+        - colorIndex: 1
+          iconNameOrGuid: 
+    - goDatas_byGlobalId:
+        keys:
+        - globalObjectIdString: GlobalObjectId_V1-2-6aaa301252a6e784eb804c724845fc3f-1494317932-0
+        - globalObjectIdString: GlobalObjectId_V1-2-6aaa301252a6e784eb804c724845fc3f-771468949-0
+        - globalObjectIdString: GlobalObjectId_V1-2-6aaa301252a6e784eb804c724845fc3f-2036613476-0
+        - globalObjectIdString: GlobalObjectId_V1-2-6aaa301252a6e784eb804c724845fc3f-1711302648-0
+        values:
+        - colorIndex: 1
+          iconNameOrGuid: LightmapParameters Icon
+        - colorIndex: 1
+          iconNameOrGuid: LightmapParameters Icon
+        - colorIndex: 1
+          iconNameOrGuid: Camera Icon
         - colorIndex: 1
           iconNameOrGuid: 

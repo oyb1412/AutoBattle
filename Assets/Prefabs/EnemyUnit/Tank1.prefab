@@ -55,11 +55,11 @@ MonoBehaviour:
   currentUnitType: 0
   currentUnitGroup: 1
   currentHP: 0
-  maxHP: 200
+  maxHP: 1600
   moveSpeed: 1
   attackSpeed: 2
   saveAttackSpeed: 0
-  attackDamage: 5
+  attackDamage: 80
   saveAttackDamage: 0
   attackRange: 1
   saveAttackRange: 0
@@ -67,6 +67,7 @@ MonoBehaviour:
   saveMoveSpeed: 0
   count: 1
   level: 0
+  saveSlider: {fileID: 0}
   attackBullet: {fileID: 0}
   firePos: {fileID: 0}
   attackCollider: {fileID: 7566873569025063784}

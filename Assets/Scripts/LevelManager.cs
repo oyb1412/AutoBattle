@@ -6,11 +6,12 @@ using DG.Tweening;
 using Unity.VisualScripting;
 using static UnityEditor.Progress;
 //현재 스테이트 구별용 배열
-public enum StateType { BATTLE, NONBATTLE, WIN, LOSE, WAIT, SELECT}
+public enum StateType { BATTLE, NONBATTLE, WIN, LOSE, WAIT, SELECT,GAMEOVER}
 public class LevelManager : MonoBehaviour
 {
     public StateType currentState;
 
+    [SerializeField] GotoScene scene;
     //고정 string문자열은 상수로 저장
     public const string playerLayer = "PlayerUnit";
     public const string enemyLayer = "EnemyUnit";
@@ -64,20 +65,30 @@ public class LevelManager : MonoBehaviour
     //소환용 포지션
     Vector2[,] summonPos;
 
-    //아이템 선택 판넬
-    [SerializeField] GameObject selectPanel;
+    //아이템 선택 페이드 판넬
+    [SerializeField] GameObject selectFadePanel;
 
     //각각 아이템 판넬
     [SerializeField] GameObject[] itemPanel;
 
     //플레이어 저장
-    [SerializeField] GameObject[] savePlayer;
+    [SerializeField] GameObject[] savePlayer;   
+    
+    //애너미 저장
+    [SerializeField] GameObject[] saveEnemy;
 
     //에러 메시지 판넬
     public GameObject errorMessagePanel;
 
     //에러 메시지 텍스트
     public Text errorMessageText;
+
+    //플레이어 체력 표시 obj
+    [SerializeField] GameObject heart;
+
+    //플레이어 피격 표시 obj
+    [SerializeField] Image hitPanel;
+
     void Start()
     {
         currentState = StateType.NONBATTLE;
@@ -117,6 +128,7 @@ public class LevelManager : MonoBehaviour
                 //전투 패배
                 if (target[0].GetComponent<PlayerUnitManager>() != null)
                 {
+                    StartCoroutine(RoundLoseCorutine(3f));
                 }
                 //전투 승리
                 else if (target[0].GetComponent<EnemyUnitManager>() != null)
@@ -149,8 +161,66 @@ public class LevelManager : MonoBehaviour
         centerLine.SetActive(true);
     }
 
+    IEnumerator HitEffectCorutine(float size)
+    {
+        hitPanel.gameObject.SetActive(true);
+        heart.GetComponent<RectTransform>().sizeDelta = new Vector2(size, heart.GetComponent<RectTransform>().sizeDelta.y);
+        Camera.main.transform.DOShakePosition(1f, 0.5f);
+        float alpha = 0.5f;
+        while(true)
+        {
+            alpha -= Time.deltaTime * 0.5f;
+            hitPanel.color = new Color(1f,0f,0f,alpha);
+            yield return null;
+            if(alpha <= 0)
+            {
+                hitPanel.gameObject.SetActive(false);
+                hitPanel.color = Color.red;
+                break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 전투 패배 후 지연시간
+    /// </summary>
+    /// <param name="exittime"></param>
+    /// <returns></returns>
+    IEnumerator RoundLoseCorutine(float exittime)
+    {
+        switch (heart.GetComponent<RectTransform>().sizeDelta.x)
+        {
+            //게임 오버
+            case 100:
+                currentState = StateType.GAMEOVER;
+                StartCoroutine(HitEffectCorutine(0));
+                StopAllCoroutines();
+                scene.GoToScene(2);
+                break;
+            case 200:
+                StartCoroutine(HitEffectCorutine(100f));
+                break;
+            case 300:
+                StartCoroutine(HitEffectCorutine(200f));
+                break;
+        }
+        if (currentState != StateType.GAMEOVER)
+        {
+            var time = new WaitForSeconds(exittime);
+            SetAllUnit();
+            currentState = StateType.LOSE;
+            centerLine.transform.DOMoveY(0f, exittime);
+            yield return time;
+            currentState = StateType.SELECT;
+            SetSelectItem();
+            currentRoundText.text = currentRound + " 라운드";
+            centerLine.SetActive(true);
+        }
+    }
+
     /// <summary>
     /// 선택지 선택
+    /// 버튼으로 발동
     /// </summary>
     public void SelectItemClick(int index)
     {
@@ -158,6 +228,8 @@ public class LevelManager : MonoBehaviour
         {
             itemPanel[i].gameObject.SetActive(false);
         }
+        selectFadePanel.gameObject.SetActive(false);
+
         currentState = StateType.NONBATTLE;
         mainPanel.GetComponent<RectTransform>().DOAnchorPosY(-430f, 3f);
         doNextStageBtn.GetComponent<RectTransform>().DOAnchorPosY(-760f, 3f);
@@ -168,7 +240,7 @@ public class LevelManager : MonoBehaviour
         else
             CreateItem(index);
 
-        SetGold(30);
+        SetGold(50);
     }
 
     /// <summary>
@@ -209,25 +281,86 @@ public class LevelManager : MonoBehaviour
         itemPanel[ran[0]].gameObject.SetActive(true);
         itemPanel[ran[1]].gameObject.SetActive(true);
         itemPanel[ran[2]].gameObject.SetActive(true);
+        selectFadePanel.gameObject.SetActive(true);
     }
+
+    /// <summary>
+    /// 현재 라운드에 따라 몬스터 소환
+    /// </summary>
+    /// <param name="round"></param>
     void SummonEnemyUnit(int round)
     {
         switch (round)
         {
             case 1:
                 Instantiate(enemyMeleeUnitPrefabs[0], summonPos[0, 2], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[1, 2], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[3, 3], Quaternion.identity);
                 Instantiate(enemyMeleeUnitPrefabs[0], summonPos[0, 4], Quaternion.identity);
-                Instantiate(enemyRangeUnitPrefabs[0], summonPos[2, 3], Quaternion.identity);
                 break;
             case 2:
-                
+                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[0, 2], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[0, 4], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[1, 4], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[1, 2], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[0], summonPos[2, 2], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[0], summonPos[2, 4], Quaternion.identity);
                 break;
-
             case 3:
-        
+                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[0, 2], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[1, 2], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[1, 4], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[0], summonPos[2, 3], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[0], summonPos[2, 1], Quaternion.identity);
+                break;
+            case 4:
+                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[1, 2], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[1, 3], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[0], summonPos[2, 1], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[0], summonPos[2, 2], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[0], summonPos[2, 3], Quaternion.identity);
+                break;
+            case 5:
+                Instantiate(enemyTankUnitPrefabs[0], summonPos[0, 1], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[0], summonPos[2, 2], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[0], summonPos[2, 3], Quaternion.identity);
+                break;
+            case 6:
+                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[0, 2], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[1, 2], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[3, 3], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[0, 4], Quaternion.identity);
+                break;
+            case 7:
+                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[0, 2], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[0, 4], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[1, 4], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[1, 2], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[1], summonPos[2, 2], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[1], summonPos[2, 4], Quaternion.identity);
+                break;
+            case 8:
+                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[0, 2], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[1, 2], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[1, 4], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[1], summonPos[2, 3], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[1], summonPos[2, 1], Quaternion.identity);
+                break;
+            case 9:
+                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[1, 2], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[1, 3], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[1], summonPos[2, 1], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[1], summonPos[2, 2], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[1], summonPos[2, 3], Quaternion.identity);
+                break;
+            case 10:
+                Instantiate(enemyTankUnitPrefabs[1], summonPos[0, 1], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[1], summonPos[2, 2], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[1], summonPos[2, 3], Quaternion.identity);
                 break;
         }
     }
+
     /// <summary>
     /// 전투씬으로 돌입 전 대기
     /// </summary>
@@ -240,15 +373,16 @@ public class LevelManager : MonoBehaviour
         doNextStageBtn.GetComponent<RectTransform>().DOAnchorPosY(-1150f, exittime);
         centerLine.transform.DOMoveY(15f, exittime);
         mainPanel.GetComponent<RectTransform>().DOAnchorPosY(-720f, exittime);
-        SavePlayerUnit();
+        SaveUnit();
         yield return time;
         currentState = StateType.BATTLE;
     }
 
     /// <summary>
     /// 전투 시작 전 모든 플레이어 유닛의 위치와 자기자신 프리펩을 저장
+    /// 전투 시작 전 모든 애너미 유닛의 위치와 자기자신 프리펩을 저장
     /// </summary>
-    void SavePlayerUnit()
+    void SaveUnit()
     {
         var obj = GameObject.FindGameObjectsWithTag("Player");
         savePlayer = new GameObject[obj.Length];
@@ -258,10 +392,19 @@ public class LevelManager : MonoBehaviour
             savePlayer[i].GetComponent<PlayerUnitManager>().SetOtherObject(false);
             savePlayer[i].SetActive(false);
         }
+
+        obj = GameObject.FindGameObjectsWithTag("Enemy");
+        saveEnemy = new GameObject[obj.Length];
+        for (int i = 0; i < obj.Length; i++)
+        {
+            saveEnemy[i] = Instantiate(obj[i], null);
+            saveEnemy[i].GetComponent<EnemyUnitManager>().SetOtherObject(false);
+            saveEnemy[i].SetActive(false);
+        }
     }
 
     /// <summary>
-    /// 전투 종료 후 저장해둔 플레이어 유닛의 위치와 체력을 기반으로 플레이어 리셋
+    /// 전투 승리 시 저장해둔 플레이어 유닛의 위치와 체력을 기반으로 플레이어 리셋
     /// </summary>
     void SetPlayerUnit()
     {
@@ -274,9 +417,27 @@ public class LevelManager : MonoBehaviour
         for (int i = 0; i< savePlayer.Length;i++)
         {
             savePlayer[i].SetActive(true);
-            savePlayer[i].GetComponent<PlayerUnitManager>().SetOtherObject(true);
-
+            savePlayer[i].GetComponent<PlayerUnitManager>().SetStarObject(true);
         }
+    }
+
+    /// <summary>
+    /// 전투 패배 시 저장해둔 모든 유닛의 위치와 체력을 기반으로 유닛 리셋
+    /// </summary>
+    void SetAllUnit()
+    {
+        var obj = GameObject.FindGameObjectsWithTag("Enemy");
+        for (int i = 0; i < obj.Length; i++)
+        {
+            obj[i].GetComponent<EnemyUnitManager>().DeleteOtherObject();
+            Destroy(obj[i]);
+        }
+        for (int i = 0; i < saveEnemy.Length; i++)
+        {
+            saveEnemy[i].SetActive(true);
+        }
+
+        SetPlayerUnit();
     }
     /// <summary>
     /// Start버튼 클릭으로 발동

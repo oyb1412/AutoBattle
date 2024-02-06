@@ -68,10 +68,9 @@ public class UnitManager : MonoBehaviour
 
 
     //실제로 사용할 유닛의 체력바
-    protected Slider saveSlider;
+    public Slider saveSlider;
 
-    //체력바 표시를 위한 정보 저장용 필드
-    UnitManager player, enemy;
+
 
     //주변 적 저장용 배열
     protected RaycastHit2D[] targets;
@@ -122,12 +121,15 @@ public class UnitManager : MonoBehaviour
     public bool isAttack;
     public bool isStun;
 
-
+    //hp바 비활성화 타이머
+    float sliderTimer;
     virtual protected void Awake()
     {
         unitCollider = GetComponent<Collider2D>();
         anime = GetComponent<Animator>();
-        saveSlider = Instantiate(hpSlider, GameObject.Find("OverrayCanvas").transform);
+        saveSlider = Instantiate(hpSlider, GameObject.Find("OtherCanvas").transform);
+        saveSlider.transform.position = Camera.main.WorldToScreenPoint(new Vector3(transform.position.x, transform.position.y + 1.4f, transform.position.z));
+        saveSlider.gameObject.SetActive(false);
         saveAttackDamage = attackDamage;
         saveAttackSpeed = attackSpeed;
         saveAttackRange = attackRange;
@@ -151,44 +153,11 @@ public class UnitManager : MonoBehaviour
         //}
         anime.SetBool("Run", isMove);
         anime.SetBool("Jump", isJump);
-        ShowHpSlider();
 
         if (!isStun)
             SetAnmation();
     }
-    protected void ShowHpSlider()
-    {
-        if (currentUnitGroup == unitGroup.PLAYER)
-        {
-            if (GameManager.instance.MouseRayCast( "Player", "PlayerUnit"))
-            {
-                player = GameManager.instance.MouseRayCast("Player", "PlayerUnit").GetComponent<PlayerUnitManager>();
-                player.saveSlider.gameObject.SetActive(true);
-                player.saveSlider.value = player.currentHP / player.maxHP;
-                player.saveSlider.transform.position = Camera.main.WorldToScreenPoint(new Vector3(player.transform.position.x, player.transform.position.y + 1.4f, player.transform.position.z));
-            }
-            else if (player != null)
-            {
-                if(player.saveSlider != null)
-                player.saveSlider.gameObject.SetActive(false);
-            }
-        }
-        else
-        {
-            if (GameManager.instance.MouseRayCast("Enemy", "EnemyUnit") != null)
-            {
-                enemy = GameManager.instance.MouseRayCast("Enemy", "EnemyUnit").GetComponent<EnemyUnitManager>();
-                enemy.saveSlider.gameObject.SetActive(true);
-                enemy.saveSlider.value = enemy.currentHP / enemy.maxHP;
-                enemy.saveSlider.transform.position = Camera.main.WorldToScreenPoint(new Vector3(enemy.transform.position.x, enemy.transform.position.y + 1.4f, enemy.transform.position.z)); 
-            }
-            else if (enemy != null)
-            {
-                if(enemy.saveSlider != null)
-                    enemy.saveSlider.gameObject.SetActive(false);
-            }
-        }
-    }
+    
 
     /// <summary>
     /// 유닛의 현재 상태에 따라 애니메이션 진행
@@ -226,9 +195,9 @@ public class UnitManager : MonoBehaviour
                     isJump = false;
                     if (currentUnitType == unitType.MELEE)
                         StartCoroutine(MeleeAttackCorutine());
-                    else if (currentUnitType == unitType.RANGE)
+                    else if (currentUnitType == unitType.RANGE && count >0)
                         StartCoroutine(RangeAttackCorutine());
-                    else if (currentUnitType == unitType.MAGE)
+                    else if (currentUnitType == unitType.MAGE && count > 0)
                         StartCoroutine(MageAttackCorutine());
                 }
                 break;
@@ -264,9 +233,8 @@ public class UnitManager : MonoBehaviour
         anime.SetTrigger("Attack");
         isAttack = true;
         yield return shottime;
-        if (target == null)
-            StopCoroutine(RangeAttackCorutine());
-        else
+
+        if(target != null)
         {
             var dir = target.transform.position - firePos.transform.position;
             var arrow = Instantiate(attackBullet, firePos.transform);
@@ -279,7 +247,7 @@ public class UnitManager : MonoBehaviour
             if (level > 1 && playerUnitType == playerUnitType.RANGE0)
             {
                 //레벨에 비례해 멀티샷 확률 조정
-                var ran = Random.Range(0, (5 - player.level));
+                var ran = Random.Range(0, (5 - level));
                 if (ran == 0)
                 {
                     //멀티샷 발동시 약간의 지연시간 후에 한발 더 발사
@@ -287,8 +255,10 @@ public class UnitManager : MonoBehaviour
                 }
             }
         }
+        count--;
         yield return attacktime;
         isAttack = false;
+        count++;
     }
 
 
@@ -346,7 +316,7 @@ public class UnitManager : MonoBehaviour
                         var player = target[i].transform.GetComponent<PlayerUnitManager>();
                         float bless = attackDamage;
                         //아군의 공격력dmf 지정 시간만큼 업
-                        StartCoroutine(BlessCorutine(2f, player, attackDamage / 2f));
+                        StartCoroutine(BlessCorutine(attackSpeed, player, attackDamage / 2f));
                     }
                 }
             }
@@ -363,7 +333,6 @@ public class UnitManager : MonoBehaviour
                         var dir1 = target.transform.position - firePos.transform.position;
                         var arrow1 = Instantiate(attackBullet, firePos.transform);
                         dir1 = new Vector2(dir1.x, dir1.y + 1f);
-                        Debug.Log("1");
                         arrow1.GetComponent<BulletController>().Init(target.transform.position, dir1, attackDamage, unitGroup.PLAYER);
                     }
                 }
@@ -371,10 +340,11 @@ public class UnitManager : MonoBehaviour
 
             }
             arrow.GetComponent<BulletController>().Init(target.transform.position, dir, attackDamage, unitGroup.PLAYER);
-
+            count--;
         }
         yield return attacktime;
         isAttack =false;
+        count++;
     }
 
     IEnumerator BlessCorutine(float time, PlayerUnitManager unit, float damage)
@@ -571,5 +541,12 @@ public class UnitManager : MonoBehaviour
             saveLevelStar.gameObject.SetActive(trigger);
         if (saveSlider)
             saveSlider.gameObject.SetActive(trigger);
+    }
+
+    public void SetStarObject(bool trigger)
+    {
+        if(saveLevelStar)
+            saveLevelStar.gameObject.SetActive(trigger);
+
     }
 }

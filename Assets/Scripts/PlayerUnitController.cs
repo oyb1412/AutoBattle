@@ -20,14 +20,14 @@ public class PlayerUnitController : MonoBehaviour
 
     //맵 중앙에 표시되는 배치된 유닛의 수를 표시하는 텍스트
     [Header("ActiveUnitNumText")]
-    [SerializeField] Text activeUnitNumText;
+    public Text activeUnitNumText;
 
     //현재 배치된 유닛의 수
     [Header("CurrentActiveUnitNum")]
-    [HideInInspector] public int currentActiveUnitNum;
+     public int currentActiveUnitNum;
 
     //배치 가능한 유닛의 최대 수
-    const int maxActiveUnitNum = 9;
+    public const int maxActiveUnitNum = 9;
 
     Vector2 savePosition;
 
@@ -100,9 +100,19 @@ public class PlayerUnitController : MonoBehaviour
                 //전장에 배치 가능한 수만큼 이미 몹이 배치되어있을 경우
                 if (currentActiveUnitNum >= maxActiveUnitNum)
                 {
-                    isTouch = false;
-                    //저장해둔 원래 위치로 이동
-                    target.transform.position = savePosition;
+                    //보관함에서 이동시킨 경우
+                    if(savePosition.x < rimitPos[1])
+                    {
+                        //저장해둔 원래 위치로 이동
+                        target.transform.position = savePosition;
+                        isTouch = false;
+                        GameManager.instance.levelManager.SetErrorMessage("더이상 전장에 유닛을 내려놓을 수 없습니다!");
+
+                    }
+                    //전장에서 이동시킨 경우
+                    else
+                        isTouch = false;
+
                 }
                 //유닛을 전장 내에 놓았고, 현재 배치수가 최대 배치수보다 적을 경우
                 if (target.transform.position.x < rimitPos[0] && target.transform.position.x > rimitPos[1] &&
@@ -121,8 +131,8 @@ public class PlayerUnitController : MonoBehaviour
                         currentActiveUnitNum++;
                         //숫자를 조정했으니 텍스트도 변경해준다
                         activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
-
-                        SynageSet(1);
+                        target.savePos = target.transform.position;
+                        SynageSet(1, target);
                     }
                     //유닛의 상태를 wait로 변경
                     target.currentUnitState = unitState.WAIT;
@@ -131,34 +141,36 @@ public class PlayerUnitController : MonoBehaviour
                     isTouch = false;
                 }
 
-                    //현재 마우스의 위치가 쓰레기통일 경우
-                    if (GameManager.instance.MouseRayCast(LevelManager.SellBinTagNLayer, LevelManager.SellBinTagNLayer) != null)
+
+                //현재 마우스의 위치가 쓰레기통일 경우
+                if (GameManager.instance.MouseRayCast(LevelManager.SellBinTagNLayer, LevelManager.SellBinTagNLayer) != null)
+                {
+                    touchDelay = 0;
+                    isTouch = false;
+                    //유닛이 있던 보관함을 비워준다
+                    BuySelectUnit.summonIndex[target.buyUnitIndex] = false;
+                    //활성화된 보관함의 수를 조정한다
+                    BuySelectUnit.currentActiveUnitNum--;
+                    //유닛 판매가만큼 골드를 얻는다
+                    GameManager.instance.levelManager.SetGold(LevelManager.sellCost);
+
+                    //유닛이 아이템을 가진 상태면 아이템 드랍
+                    target.ClearItem();
+                    //유닛이 지닌 모든 오브젝트 삭제
+                    target.DeleteOtherObject();
+                    //유닛을 삭제한다
+                    target.currentUnitState = unitState.DIE;
+                    target.SetHP(-1000);
+                    //전장에서 쓰레기통으로 유닛을 옮긴 경우
+                    if (target.savePos.x > rimitPos[1])
                     {
-                        touchDelay = 0;
-                        isTouch = false;
-                        //유닛이 있던 보관함을 비워준다
-                        BuySelectUnit.summonIndex[target.buyUnitIndex] = false;
-                        //활성화된 보관함의 수를 조정한다
-                        BuySelectUnit.currentActiveUnitNum--;
-                        //유닛 판매가만큼 골드를 얻는다
-                        GameManager.instance.levelManager.SetGold(LevelManager.sellCost);
-
-                        //유닛이 아이템을 가진 상태면 아이템 드랍
-                        target.ClearItem();
-                        //유닛이 지닌 모든 오브젝트 삭제
-                        target.DeleteOtherObject();
-                        //유닛을 삭제한다
-                        target.currentUnitState = unitState.DIE;
-
-                        //전장에서 쓰레기통으로 유닛을 옮긴 경우
-                        if (savePosition.x > rimitPos[1])
-                        {
-                            SynageSet(-1);
-
-                        }
+                        SynageSet(-1, target);
+                        currentActiveUnitNum--;
+                        activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
+                    }
                 }
-                    //현재 마우스의 위치가 보관함일 경우
-                    if(GameManager.instance.MouseRayCast(LevelManager.SpawnColliderLayer) != null)
+                //현재 마우스의 위치가 보관함일 경우
+                if(GameManager.instance.MouseRayCast(LevelManager.SpawnColliderLayer) != null)
                     {
                         var col = GameManager.instance.MouseRayCast(LevelManager.SpawnColliderLayer);
                         //보관함이 null이 아닐때
@@ -184,12 +196,13 @@ public class PlayerUnitController : MonoBehaviour
                                                 currentActiveUnitNum--;
                                                 //숫자를 조정했으니 텍스트도 변경해준다
                                                 activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
-                                            }
-                                        }
+                                             }
+                                         }
                                         target.buyUnitIndex = 0;
                                         BuySelectUnit.summonIndex[0] = true;
                                         target.transform.position = GameManager.instance.buySelectUnit.summonPos[0];
-                                        touchDelay = 0;
+                                        target.savePos = target.transform.position;
+                                         touchDelay = 0;
                                          isTouch = false;
                                     }
                                     break;                            
@@ -208,13 +221,14 @@ public class PlayerUnitController : MonoBehaviour
                                                 currentActiveUnitNum--;
                                                 //숫자를 조정했으니 텍스트도 변경해준다
                                                 activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
-                                            SynageSet(-1);
+                                            SynageSet(-1, target);
                                         }
                                     }
                                         target.buyUnitIndex = 1;
                                         BuySelectUnit.summonIndex[1] = true;
                                         target.transform.position = GameManager.instance.buySelectUnit.summonPos[1];
-                                        touchDelay = 0;
+                                        target.savePos = target.transform.position;
+                                         touchDelay = 0;
                                          isTouch = false;
                                     }
                                     break;                             
@@ -235,15 +249,16 @@ public class PlayerUnitController : MonoBehaviour
                                                 activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
 
                                             //시너지 조정
-                                            SynageSet(-1);
+                                            SynageSet(-1, target);
 
                                         }
                                     }
                                         target.buyUnitIndex = 2;
                                         BuySelectUnit.summonIndex[2] = true;
                                         target.transform.position = GameManager.instance.buySelectUnit.summonPos[2];
-                                         touchDelay = 0;
-                                          isTouch = false;
+                                        target.savePos = target.transform.position;
+                                        touchDelay = 0;
+                                        isTouch = false;
                                     }
                                     break;                              
                                 case LevelManager.SpawnColliderTag3:
@@ -261,14 +276,15 @@ public class PlayerUnitController : MonoBehaviour
                                                 currentActiveUnitNum--;
                                                 //숫자를 조정했으니 텍스트도 변경해준다
                                                 activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
-                                            SynageSet(-1);
+                                            SynageSet(-1, target);
                                         }
                                     }
                                         target.buyUnitIndex = 3;
                                         BuySelectUnit.summonIndex[3] = true;
                                         target.transform.position = GameManager.instance.buySelectUnit.summonPos[3];
+                                        target.savePos = target.transform.position;
                                         touchDelay = 0;
-                                          isTouch = false;
+                                        isTouch = false;
                                     }
                                     break;                            
                                 case LevelManager.SpawnColliderTag4:
@@ -287,7 +303,7 @@ public class PlayerUnitController : MonoBehaviour
                                                 //숫자를 조정했으니 텍스트도 변경해준다
                                                 activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
 
-                                            SynageSet(-1);
+                                            SynageSet(-1,target);
 
                                             
                                             }
@@ -295,8 +311,9 @@ public class PlayerUnitController : MonoBehaviour
                                         target.buyUnitIndex = 4;
                                         BuySelectUnit.summonIndex[4] = true;
                                         target.transform.position = GameManager.instance.buySelectUnit.summonPos[4];
-                                         touchDelay = 0;
-                                           isTouch = false;
+                                        target.savePos = target.transform.position;
+                                        touchDelay = 0;
+                                        isTouch = false;
                                     }
                                     break;
                             }
@@ -308,10 +325,10 @@ public class PlayerUnitController : MonoBehaviour
     }
 
     //시너지 텍스트 표시와 수치 변경(유닛을 배치할 때마다 실행)
-    public void SynageSet(int index)
+    public void SynageSet(int index, PlayerUnitManager targetUnit)
     {
         //전장에 배치하거나 해제한 유닛의 타입에 따라 시너지 숫자 변경
-        switch (target.currentUnitType)
+        switch (targetUnit.currentUnitType)
         {
             case unitType.MELEE:
                 activeUnitTypeNum[(int)unitType.MELEE] += index;
@@ -363,15 +380,15 @@ public class PlayerUnitController : MonoBehaviour
                             player.attackRange = player.saveAttackRange;
                             break;
                         case 1:
-                            player.attackSpeed = player.saveAttackSpeed * (1 +  (0.01f * data[(int)unitType.RANGE].upAttackSpeed[1]));
+                            player.attackSpeed = player.saveAttackSpeed * (1 -  (0.01f * data[(int)unitType.RANGE].upAttackSpeed[1]));
                             player.attackRange = player.saveAttackRange * (1 + (0.01f * data[(int)unitType.RANGE].upAttackRange[1]));
                             break;
                         case 2:
-                            player.attackSpeed = player.saveAttackSpeed * (1 + (0.01f * data[(int)unitType.RANGE].upAttackSpeed[2]));
+                            player.attackSpeed = player.saveAttackSpeed * (1 - (0.01f * data[(int)unitType.RANGE].upAttackSpeed[2]));
                             player.attackRange = player.saveAttackRange * (1 +  (0.01f * data[(int)unitType.RANGE].upAttackRange[2]));
                             break;
                         case 3:
-                            player.attackSpeed = player.saveAttackSpeed * (1 +  (0.01f * data[(int)unitType.RANGE].upAttackSpeed[3]));
+                            player.attackSpeed = player.saveAttackSpeed * (1 -  (0.01f * data[(int)unitType.RANGE].upAttackSpeed[3]));
                             player.attackRange = player.saveAttackRange * (1 + (0.01f * data[(int)unitType.RANGE].upAttackRange[3]));
                             break;
                     }
