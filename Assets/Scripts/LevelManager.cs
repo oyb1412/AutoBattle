@@ -125,7 +125,7 @@ public class LevelManager : MonoBehaviour
         if(currentState == StateType.BATTLE) 
         {
             var target = GameObject.FindGameObjectsWithTag(tag);
-            if(target.Length == 1)
+            if(target.Length <= 1)
             {
                 //전투 패배
                 if (target[0].GetComponent<PlayerUnitManager>() != null)
@@ -242,12 +242,12 @@ public class LevelManager : MonoBehaviour
         doNextStageBtn.GetComponent<RectTransform>().DOAnchorPosY(-760f, 3f);
         if (index == 6)
         {
-            SetGold(50);
+            SetGold(30);
         }
         else
             CreateItem(index);
 
-        SetGold(50);
+        SetGold(30);
     }
 
     /// <summary>
@@ -297,75 +297,46 @@ public class LevelManager : MonoBehaviour
     /// <param name="round"></param>
     void SummonEnemyUnit(int round)
     {
-        GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SUMMON);
+        if(round != 1)
+            GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SUMMON);
+
+        if (round > 5)
+            round = round % 5;
 
         switch (round)
         {
             case 1:
-                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[0, 2], Quaternion.identity);
-                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[1, 2], Quaternion.identity);
-                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[3, 3], Quaternion.identity);
-                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[0, 4], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[currentRound / 5], summonPos[0, 2], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[currentRound / 5], summonPos[1, 2], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[currentRound / 5], summonPos[3, 3], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[currentRound / 5], summonPos[0, 4], Quaternion.identity);
                 break;
             case 2:
-                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[0, 2], Quaternion.identity);
-                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[0, 4], Quaternion.identity);
-                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[1, 4], Quaternion.identity);
-                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[1, 2], Quaternion.identity);
-                Instantiate(enemyRangeUnitPrefabs[0], summonPos[2, 2], Quaternion.identity);
-                Instantiate(enemyRangeUnitPrefabs[0], summonPos[2, 4], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[currentRound / 5], summonPos[0, 2], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[currentRound / 5], summonPos[0, 4], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[currentRound / 5], summonPos[1, 4], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[currentRound / 5], summonPos[1, 2], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[currentRound / 5], summonPos[2, 2], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[currentRound / 5], summonPos[2, 4], Quaternion.identity);
                 break;
             case 3:
-                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[0, 2], Quaternion.identity);
-                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[1, 2], Quaternion.identity);
-                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[1, 4], Quaternion.identity);
-                Instantiate(enemyRangeUnitPrefabs[0], summonPos[2, 3], Quaternion.identity);
-                Instantiate(enemyRangeUnitPrefabs[0], summonPos[2, 1], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[currentRound / 5], summonPos[0, 2], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[currentRound / 5], summonPos[1, 2], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[currentRound / 5], summonPos[1, 4], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[currentRound / 5], summonPos[2, 3], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[currentRound / 5], summonPos[2, 1], Quaternion.identity);
                 break;
             case 4:
-                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[1, 2], Quaternion.identity);
-                Instantiate(enemyMeleeUnitPrefabs[0], summonPos[1, 3], Quaternion.identity);
-                Instantiate(enemyRangeUnitPrefabs[0], summonPos[2, 1], Quaternion.identity);
-                Instantiate(enemyRangeUnitPrefabs[0], summonPos[2, 2], Quaternion.identity);
-                Instantiate(enemyRangeUnitPrefabs[0], summonPos[2, 3], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[currentRound / 5], summonPos[1, 2], Quaternion.identity);
+                Instantiate(enemyMeleeUnitPrefabs[currentRound / 5], summonPos[1, 3], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[currentRound / 5], summonPos[2, 1], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[currentRound / 5], summonPos[2, 2], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[currentRound / 5], summonPos[2, 3], Quaternion.identity);
                 break;
             case 5:
-                Instantiate(enemyTankUnitPrefabs[0], summonPos[0, 1], Quaternion.identity);
-                Instantiate(enemyRangeUnitPrefabs[0], summonPos[2, 2], Quaternion.identity);
-                Instantiate(enemyRangeUnitPrefabs[0], summonPos[2, 3], Quaternion.identity);
-                break;
-            case 6:
-                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[0, 2], Quaternion.identity);
-                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[1, 2], Quaternion.identity);
-                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[3, 3], Quaternion.identity);
-                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[0, 4], Quaternion.identity);
-                break;
-            case 7:
-                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[0, 2], Quaternion.identity);
-                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[0, 4], Quaternion.identity);
-                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[1, 4], Quaternion.identity);
-                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[1, 2], Quaternion.identity);
-                Instantiate(enemyRangeUnitPrefabs[1], summonPos[2, 2], Quaternion.identity);
-                Instantiate(enemyRangeUnitPrefabs[1], summonPos[2, 4], Quaternion.identity);
-                break;
-            case 8:
-                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[0, 2], Quaternion.identity);
-                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[1, 2], Quaternion.identity);
-                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[1, 4], Quaternion.identity);
-                Instantiate(enemyRangeUnitPrefabs[1], summonPos[2, 3], Quaternion.identity);
-                Instantiate(enemyRangeUnitPrefabs[1], summonPos[2, 1], Quaternion.identity);
-                break;
-            case 9:
-                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[1, 2], Quaternion.identity);
-                Instantiate(enemyMeleeUnitPrefabs[1], summonPos[1, 3], Quaternion.identity);
-                Instantiate(enemyRangeUnitPrefabs[1], summonPos[2, 1], Quaternion.identity);
-                Instantiate(enemyRangeUnitPrefabs[1], summonPos[2, 2], Quaternion.identity);
-                Instantiate(enemyRangeUnitPrefabs[1], summonPos[2, 3], Quaternion.identity);
-                break;
-            case 10:
-                Instantiate(enemyTankUnitPrefabs[1], summonPos[0, 1], Quaternion.identity);
-                Instantiate(enemyRangeUnitPrefabs[1], summonPos[2, 2], Quaternion.identity);
-                Instantiate(enemyRangeUnitPrefabs[1], summonPos[2, 3], Quaternion.identity);
+                Instantiate(enemyTankUnitPrefabs[currentRound / 6], summonPos[0, 1], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[currentRound / 6], summonPos[2, 2], Quaternion.identity);
+                Instantiate(enemyRangeUnitPrefabs[currentRound / 6], summonPos[2, 3], Quaternion.identity);
                 break;
         }
     }

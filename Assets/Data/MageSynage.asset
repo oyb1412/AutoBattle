@@ -18,8 +18,8 @@ MonoBehaviour:
   upAttackRange: []
   downResistance:
   - 0
-  - 15
+  - 10
+  - 20
   - 30
-  - 45
   synageInfo: "\uBAA8\uB4E0 \uB9C8\uBC95\uC0AC \uC720\uB2DB\uC758  \uACF5\uACA9\uB825,
     \uBC84\uD504\uB7C9, \uD68C\uBCF5\uB7C9{0}% \uC99D\uAC00"

@@ -133,6 +133,7 @@ MonoBehaviour:
   saveMoveSpeed: 0
   count: 1
   level: 1
+  saveSlider: {fileID: 0}
   attackBullet: {fileID: 8040918073260570242, guid: d4624f7644d0d6b40a4ae6f5f55c0bf1, type: 3}
   firePos: {fileID: 3946703846867840535}
   attackCollider: {fileID: 0}
@@ -150,6 +151,7 @@ MonoBehaviour:
   itemAttackSpeed: 0
   itemMoveSpeed: 0
   itemHP: 0
+  savePos: {x: 0, y: 0}
   levelStar: []
   healEffect: {fileID: 3571836761345050374}
   blessEffect: {fileID: 4696651029757628361}

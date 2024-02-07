@@ -16,14 +16,14 @@ MonoBehaviour:
   upReflection: []
   upAttackSpeed:
   - 0
-  - 15
-  - 30
-  - 45
-  upAttackRange:
-  - 0
   - 10
   - 20
   - 30
+  upAttackRange:
+  - 0
+  - 5
+  - 10
+  - 15
   downResistance: []
   synageInfo: "\uBAA8\uB4E0 \uAD81\uC218 \uC720\uB2DB\uC758 \uACF5\uACA9\uC18D\uB3C4
     {0}% \uC99D\uAC00\n\uBAA8\uB4E0 \uAD81\uC218 \uC720\uB2DB\uC758 \uC0AC\uAC70\uB9AC

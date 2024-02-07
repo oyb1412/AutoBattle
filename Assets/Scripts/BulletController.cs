@@ -61,7 +61,7 @@ public class BulletController : MonoBehaviour
                     var ran = Random.Range(0, 20 - level * 2);
                     if (ran == 0)
                     {
-                        critical = 3000f;
+                        critical = 300f;
                     }
                 }
                 var target = collision.GetComponent<EnemyUnitManager>();

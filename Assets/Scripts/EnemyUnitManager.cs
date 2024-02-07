@@ -17,12 +17,13 @@ public class EnemyUnitManager : UnitManager
     }
     public void SetStatus(int round)
     {
-        attackDamage += round * 2;
-        moveSpeed += 0.1f * round;
-        attackSpeed -= 0.02f * round;
-        maxHP += round * 15;
+        var add = round - 1;
+        attackDamage += add * 2;
+        moveSpeed += 0.1f * add;
+        attackSpeed -= 0.02f * add;
+        maxHP += add * 15;
         currentHP = maxHP;
-        transform.localScale = new Vector2(1f+(round * 0.05f), 1f + (round * 0.05f));
+        transform.localScale = new Vector2(1f + (add * 0.05f), 1f + (round * 0.05f));
     }
 
     override protected void Update()

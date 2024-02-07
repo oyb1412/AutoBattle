@@ -57,7 +57,7 @@ MonoBehaviour:
   currentHP: 0
   maxHP: 1600
   moveSpeed: 1
-  attackSpeed: 2
+  attackSpeed: 1.8
   saveAttackSpeed: 0
   attackDamage: 80
   saveAttackDamage: 0

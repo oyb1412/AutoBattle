@@ -91,7 +91,7 @@ MonoBehaviour:
   moveSpeed: 1.5
   attackSpeed: 1.5
   saveAttackSpeed: 0
-  attackDamage: 5
+  attackDamage: 4
   saveAttackDamage: 0
   attackRange: 3
   saveAttackRange: 0

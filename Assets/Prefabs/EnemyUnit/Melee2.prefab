@@ -87,11 +87,11 @@ MonoBehaviour:
   currentUnitType: 0
   currentUnitGroup: 1
   currentHP: 0
-  maxHP: 270
+  maxHP: 200
   moveSpeed: 2
   attackSpeed: 1
   saveAttackSpeed: 0
-  attackDamage: 15
+  attackDamage: 13
   saveAttackDamage: 0
   attackRange: 1
   saveAttackRange: 0

@@ -61,7 +61,7 @@ public class UIEvent : MonoBehaviour
                     break;             
                 case "Unit5BG":
                     synagePanel.SetActive(true);
-                    info.text = "느리지만 긴 사거리와 강력한 공격력을 지닌 저격수입니다. 레벨 상승 시 일정 확률로 적을 즉사시킵니다.";
+                    info.text = "느리지만 긴 사거리와 강력한 공격력을 지닌 저격수입니다. 레벨 상승 시 일정 확률로 헤드샷이 발동합니다.";
                     break;            
                 case "Unit6BG":
                     synagePanel.SetActive(true);

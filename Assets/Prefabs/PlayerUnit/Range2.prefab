@@ -93,7 +93,7 @@ MonoBehaviour:
   moveSpeed: 1
   attackSpeed: 2.5
   saveAttackSpeed: 0
-  attackDamage: 15
+  attackDamage: 13
   saveAttackDamage: 0
   attackRange: 8
   saveAttackRange: 0
@@ -101,6 +101,7 @@ MonoBehaviour:
   saveMoveSpeed: 0
   count: 1
   level: 1
+  saveSlider: {fileID: 0}
   attackBullet: {fileID: 8617509739055946695, guid: 2735d8cd07e1149448f81800a303ddab, type: 3}
   firePos: {fileID: 2996383509066769837}
   attackCollider: {fileID: 0}
@@ -118,6 +119,7 @@ MonoBehaviour:
   itemAttackSpeed: 0
   itemMoveSpeed: 0
   itemHP: 0
+  savePos: {x: 0, y: 0}
   levelStar: []
   healEffect: {fileID: 6727341646839023117}
   blessEffect: {fileID: 2185572531567838126}

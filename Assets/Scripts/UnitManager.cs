@@ -285,10 +285,10 @@ public class UnitManager : MonoBehaviour
                         if (level > 1)
                         {
                             //힐량 증가
-                            critical = level * 3;
+                            critical = level * 2;
                         }
                         //아군의 체력 증가
-                        player.currentHP += attackDamage + critical;
+                        player.currentHP += attackDamage * 0.7f + critical;
                         //아군 체력증가 이펙트 플레이
                         player.healEffect.Play();
                     }
@@ -308,7 +308,7 @@ public class UnitManager : MonoBehaviour
                         var player = target[i].transform.GetComponent<PlayerUnitManager>();
                         float bless = attackDamage;
                         //아군의 공격력dmf 지정 시간만큼 업
-                        StartCoroutine(BlessCorutine(attackSpeed, player, attackDamage / 2f));
+                        StartCoroutine(BlessCorutine(attackSpeed, player, attackDamage * 0.3f));
                     }
                 }
                 GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.BUFF);
@@ -322,7 +322,7 @@ public class UnitManager : MonoBehaviour
                 //레벨이 2이상일때
                 if (level > 1)
                 {
-                    var ran = Random.Range(0, 4 - level);
+                    var ran = Random.Range(0, 6 - level);
                     if (ran == 0)
                     {
                         //투사체 추가
@@ -350,13 +350,13 @@ public class UnitManager : MonoBehaviour
             unit.attackDamage += damage;
             //레벨이 2 이상인 경우
             if (level > 1)
-                unit.attackSpeed -= 0.1f * level;
+                unit.attackSpeed -= 0.08f * level;
 
             unit.blessEffect.Play();
             yield return new WaitForSeconds(time);
             unit.attackDamage -= damage;
             if (level > 1)
-                unit.attackSpeed += 0.1f * level;
+                unit.attackSpeed += 0.08f * level;
             if(unit.blessEffect)
             unit.blessEffect.Stop();
         }

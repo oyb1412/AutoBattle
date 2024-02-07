@@ -55,7 +55,7 @@ MonoBehaviour:
   currentUnitType: 0
   currentUnitGroup: 0
   currentHP: 0
-  maxHP: 100
+  maxHP: 90
   moveSpeed: 1.5
   attackSpeed: 1.5
   saveAttackSpeed: 0
@@ -67,6 +67,7 @@ MonoBehaviour:
   saveMoveSpeed: 0
   count: 1
   level: 1
+  saveSlider: {fileID: 0}
   attackBullet: {fileID: 0}
   firePos: {fileID: 0}
   attackCollider: {fileID: 2720363085997425754}
@@ -84,6 +85,7 @@ MonoBehaviour:
   itemAttackSpeed: 0
   itemMoveSpeed: 0
   itemHP: 0
+  savePos: {x: 0, y: 0}
   levelStar: []
   healEffect: {fileID: 988759494530876509}
   blessEffect: {fileID: 4671947771141861653}

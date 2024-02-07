@@ -86,10 +86,10 @@ public class PlayerUnitManager : UnitManager
     }
     private void Start()
     {
-        itemDamage = saveAttackDamage * 0.15f;
-        itemAttackSpeed = saveAttackSpeed * 0.15f;
-        itemMoveSpeed = saveMoveSpeed * 0.3f;
-        itemHP = saveMaxHp * 0.3f;
+        itemDamage = saveAttackDamage * 0.1f;
+        itemAttackSpeed = saveAttackSpeed * 0.1f;
+        itemMoveSpeed = saveMoveSpeed * 0.2f;
+        itemHP = saveMaxHp * 0.2f;
     }
 
    
@@ -141,16 +141,16 @@ public class PlayerUnitManager : UnitManager
     public void UnitLevelUp()
     {
         level++;
-        moveSpeed *= 1.5f;
-        saveMoveSpeed *= 1.5f;
-        attackSpeed *= 0.8f;
-        saveAttackSpeed *= 0.8f;
-        attackDamage *= 1.5f;
-        saveAttackDamage *= 1.5f;
-        attackRange *= 1.3f;
-        saveAttackRange *= 1.3f;
+        moveSpeed *= 1.4f;
+        saveMoveSpeed *= 1.4f;
+        attackSpeed *= 0.85f;
+        saveAttackSpeed *= 0.85f;
+        attackDamage *= 1.4f;
+        saveAttackDamage *= 1.4f;
+        attackRange *= 1.1f;
+        saveAttackRange *= 1.1f;
         transform.localScale *= 1.1f;
-        maxHP *= 1.5f;
+        maxHP *= 1.2f;
         currentHP = maxHP;
 
         if (level == 2)

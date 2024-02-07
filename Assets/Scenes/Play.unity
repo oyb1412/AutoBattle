@@ -530,7 +530,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "50\uACE8\uB4DC\uB97C \uD68D\uB4DD\uD569\uB2C8\uB2E4."
+  m_Text: "30\uACE8\uB4DC\uB97C \uD68D\uB4DD\uD569\uB2C8\uB2E4."
 --- !u!222 &51620735
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7227,7 +7227,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uCC29\uC6A9 \uC720\uB2DB\uC758 \uBC29\uC5B4\uB825\uC744 30% \uC99D\uAC00\uC2DC\uD0B5\uB2C8\uB2E4"
+  m_Text: "\uCC29\uC6A9 \uC720\uB2DB\uC758 \uBC29\uC5B4\uB825\uC744 20% \uC99D\uAC00\uC2DC\uD0B5\uB2C8\uB2E4"
 --- !u!222 &892002976
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7959,7 +7959,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uCC29\uC6A9 \uC720\uB2DB\uC758 \uACF5\uACA9\uC18D\uB3C4\uB97C 15% \uC99D\uAC00\uC2DC\uD0B5\uB2C8\uB2E4"
+  m_Text: "\uCC29\uC6A9 \uC720\uB2DB\uC758 \uACF5\uACA9\uC18D\uB3C4\uB97C 10% \uC99D\uAC00\uC2DC\uD0B5\uB2C8\uB2E4"
 --- !u!222 &1030801741
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -16820,7 +16820,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uCC29\uC6A9 \uC720\uB2DB\uC758 \uCCB4\uB825\uC744 30% \uC99D\uAC00\uC2DC\uD0B5\uB2C8\uB2E4"
+  m_Text: "\uCC29\uC6A9 \uC720\uB2DB\uC758 \uCCB4\uB825\uC744 20% \uC99D\uAC00\uC2DC\uD0B5\uB2C8\uB2E4"
 --- !u!222 &1366654613
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -24392,7 +24392,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uCC29\uC6A9 \uC720\uB2DB\uC758 \uACF5\uACA9\uB825\uC744 15% \uC99D\uAC00\uC2DC\uD0B5\uB2C8\uB2E4"
+  m_Text: "\uCC29\uC6A9 \uC720\uB2DB\uC758 \uACF5\uACA9\uB825\uC744 10% \uC99D\uAC00\uC2DC\uD0B5\uB2C8\uB2E4"
 --- !u!222 &1864091255
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -25364,7 +25364,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uCC29\uC6A9 \uC720\uB2DB\uC758 \uC774\uB3D9\uC18D\uB3C4\uB97C 30% \uC99D\uAC00\uC2DC\uD0B5\uB2C8\uB2E4"
+  m_Text: "\uCC29\uC6A9 \uC720\uB2DB\uC758 \uC774\uB3D9\uC18D\uB3C4\uB97C 20% \uC99D\uAC00\uC2DC\uD0B5\uB2C8\uB2E4"
 --- !u!222 &1972401106
 CanvasRenderer:
   m_ObjectHideFlags: 0

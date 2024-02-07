@@ -78,7 +78,6 @@ public class MixUnitManager : MonoBehaviour
         for (int i = 1; i < 3; i++)
         {
             //재료로 소모된 유닛이 있던 보관함을 비움
-            if (BuySelectUnit.summonIndex[unit[i].buyUnitIndex])
                 BuySelectUnit.summonIndex[unit[i].buyUnitIndex] = false;
 
             //유닛이 보관함에 있었다면, 현재 보관함의 수용 숫자 감소

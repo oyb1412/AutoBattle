@@ -111,15 +111,27 @@ public class PlayerUnitController : MonoBehaviour
                         GameManager.instance.levelManager.SetErrorMessage("더이상 전장에 유닛을 내려놓을 수 없습니다!");
 
                     }
-                    //전장에서 이동시킨 경우
+                    //전장에서 보관함으로 이동시킨 경우
+                    else if(savePosition.x >= rimitPos[1] && target.transform.position.x < rimitPos[1])
+                    {
+                        //활성화된 보관함의 수를 조정한다
+                        BuySelectUnit.currentActiveUnitNum++;
+                        //전장에 배치된 숫자를 조정한다
+                        currentActiveUnitNum--;
+                        //숫자를 조정했으니 텍스트도 변경해준다
+                        activeUnitNumText.text = string.Format("{0} / {1}", currentActiveUnitNum, maxActiveUnitNum);
+                        GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SELECT);
+                        isTouch = false;
+                    }
+                    //전장에서 전장으로 이동시킨 경우
                     else
-                {
-                    GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SELECT);
-                    isTouch = false;
+                    {
+                        GameManager.instance.audioManager.PlayerSfx(AudioManager.Sfx.SELECT);
+                        isTouch = false;
+
+                    }
 
                 }
-
-            }
                 //유닛을 전장 내에 놓았고, 현재 배치수가 최대 배치수보다 적을 경우
                 if (target.transform.position.x < rimitPos[0] && target.transform.position.x > rimitPos[1] &&
                     target.transform.position.y > rimitPos[2] && target.transform.position.y < rimitPos[3] &&
